@@ -1,0 +1,217 @@
+﻿@model AnalyzerViewModel
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary rounded-bottom-1 text-white d-flex justify-content-between align-items-center py-2">
+            <h2 class="h5 mb-0">Method Analyzer</h2>
+            <button id="analyzerFormCollapseToggle"
+                    class="btn p-0 border-0 bg-transparent"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#analyzerFormCollapse"
+                    aria-expanded="true"
+                    aria-controls="analyzerFormCollapse"
+                    title="Toggle Analyzer Form">
+                <svg id="chevronIcon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" style="transition: transform 0.2s;">
+                    <path fill-rule="evenodd" d="M1.646 5.646a.5.5 0 0 1 .708 0L8 11.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="card-body collapse show" id="analyzerFormCollapse">
+
+            <div>
+                <form method="post" class="needs-validation" novalidate>
+                    <div class="mb-2">
+                        <label class="form-label fw-bold" for="solutionPath">Solution Path</label>
+                        <input type="text" class="form-control text-light form-control-sm" id="solutionPath" name="solutionPath" value="@Model.SolutionPath" required />
+                        <div class="invalid-feedback text-danger">Please provide a solution path.</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label fw-bold" for="namespaceName">Namespace</label>
+                            <input type="text" class="form-control text-light form-control-sm" id="namespaceName" name="namespaceName" value="@Model.NamespaceName" />
+                        </div>
+
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label fw-bold" for="className">Class Name</label>
+                            <input type="text" class="form-control text-light form-control-sm" id="className" name="className" value="@Model.ClassName" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" for="methodNameInput">Method Name</label>
+                        <input type="text" class="form-control text-light form-control-sm" id="methodNameInput" name="methodNameInput" value="@Model.MethodName" />
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               id="includeAISummary"
+                               name="includeAISummary"
+                        @(Model.IncludeAISummary ? "checked" : "") value="true" />
+                        <label class="form-check-label fw-bold text-light" for="includeAISummary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <!-- Large star -->
+                                <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162z" />
+
+                                <!-- Small star -->
+                                <path d="M13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+                            </svg> Include AI Summary
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-success px-3 py-1" id="generateGraphBtn">
+                        <span id="loaderSpinner" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" style="display:none;"></span>
+                        Generate Graph
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-3">
+    <div id="progressWrapper" class="progress" style="height:1.5rem; display:none; position: relative;">
+        <div id="progressBar"
+             class="progress-bar progress-bar-striped progress-bar-animated"
+             role="progressbar"
+             style="width:0%; height:100%;">
+            0%
+        </div>
+    </div>
+    <div class="mt-1">
+        <small id="progressMessage" class="text-warning"></small>
+    </div>
+</div>
+
+
+@if (!string.IsNullOrEmpty(Model?.JsonOutput))
+{
+    <div class="container mt-5">
+        <div class="card shadow-lg">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h3 class="h5 mb-0">Visualization</h3>
+                <button id="fullscreenToggle"
+                        class="btn p-0 border-0 bg-transparent text-white"
+                        title="Toggle Fullscreen"
+                        style="opacity: 0.8;">
+                    <svg id="fullscreenIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <!-- Expand icon (default) -->
+                        <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="card-body p-2">
+                <div id="drawflow" style="width:100%; height:70vh; min-height:500px;"></div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const editor = new Drawflow(document.getElementById('drawflow'));
+            // editor.editor_mode = 'view';
+            editor.reroute = true;
+            editor.reroute_fix_curvature = true;
+            editor.curvature = 0.5;
+
+            const data = @Html.Raw(Model.JsonOutput);
+            console.log(data);
+            editor.start();
+            editor.import(data);
+                            setTimeout(() => {
+            editor.zoom = 0.8;
+            editor.canvas_x = -100;
+            editor.canvas_y = -50;
+            editor.zoom_refresh();
+
+            // Collapse the form
+            const collapseEl = document.getElementById('analyzerFormCollapse');
+            bootstrap.Collapse.getOrCreateInstance(collapseEl).hide();
+          }, 100);
+
+            // Fullscreen functionality
+            const fullscreenToggle = document.getElementById('fullscreenToggle');
+            const drawflowDiv = document.getElementById('drawflow');
+            const fullscreenIcon = document.getElementById('fullscreenIcon');
+
+            // Icons for fullscreen states
+            const expandIcon = `<path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"/>`;
+            const compressIcon = `<path d="M5.5 0a.5.5 0 0 1 .5.5v4A1.5 1.5 0 0 1 4.5 6h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5zm5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 10 4.5v-4a.5.5 0 0 1 .5-.5zM0 10.5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 6 11.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zm10 1a1.5 1.5 0 0 1 1.5-1.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4z"/>`;
+
+            fullscreenToggle.addEventListener('click', function() {
+                if (!document.fullscreenElement) {
+                    // Enter fullscreen
+                    drawflowDiv.requestFullscreen().then(() => {
+                        fullscreenIcon.innerHTML = compressIcon;
+                        fullscreenToggle.title = "Exit Fullscreen";
+
+                        // Adjust drawflow for fullscreen
+                        drawflowDiv.style.height = '100vh';
+                        editor.zoom_refresh();
+                    }).catch(err => {
+                        console.error('Error entering fullscreen:', err);
+                    });
+                } else {
+                    // Exit fullscreen
+                    document.exitFullscreen().then(() => {
+                        fullscreenIcon.innerHTML = expandIcon;
+                        fullscreenToggle.title = "Toggle Fullscreen";
+
+                        // Restore original height
+                        drawflowDiv.style.height = '70vh';
+                        editor.zoom_refresh();
+                    }).catch(err => {
+                        console.error('Error exiting fullscreen:', err);
+                    });
+                }
+            });
+
+            // Listen for fullscreen changes (ESC key, etc.)
+            document.addEventListener('fullscreenchange', function() {
+                if (!document.fullscreenElement) {
+                    fullscreenIcon.innerHTML = expandIcon;
+                    fullscreenToggle.title = "Toggle Fullscreen";
+                    drawflowDiv.style.height = '70vh';
+                    editor.zoom_refresh();
+                }
+            });
+        });
+
+         document.addEventListener('DOMContentLoaded', function () {
+                            const form = document.querySelector('form.needs-validation');
+                            const btn = document.getElementById('generateGraphBtn');
+                            const spinner = document.getElementById('loaderSpinner');
+                            const searchIcon = document.getElementById('searchIcon');
+
+                            form.addEventListener('submit', function () {
+                                btn.disabled = true;
+                                spinner.style.display = 'inline-block';
+                                searchIcon.style.display = 'none';
+                            });
+                        });
+
+        const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/progressHub")
+                .build();
+
+            connection.on("ReportProgress", (message, percent) => {
+              document.getElementById("progressWrapper").style.display = "block";
+
+                    const msgEl = document.getElementById("progressMessage");
+        msgEl.textContent = message;
+              const bar = document.getElementById("progressBar");
+              bar.style.width = percent + "%";
+              bar.textContent = percent + "%";
+              if (percent >= 100) {
+                setTimeout(() => document.getElementById("progressWrapper").style.display = "none", 500);
+                msgEl.textContent = "";
+              }
+            });
+
+            connection.start().catch(console.error);
+    </script>
+    }
+}

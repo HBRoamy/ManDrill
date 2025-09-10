@@ -1,0 +1,189 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{092EA753-E4D5-4054-80F6-2ACD36B96F7C}|ManDrill\\ManDrill.csproj|c:\\users\\bhardwajh2\\source\\repos\\mandrill\\mandrill\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{092EA753-E4D5-4054-80F6-2ACD36B96F7C}|ManDrill\\ManDrill.csproj|solutionrelative:mandrill\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{092EA753-E4D5-4054-80F6-2ACD36B96F7C}|ManDrill\\ManDrill.csproj|c:\\users\\bhardwajh2\\source\\repos\\mandrill\\mandrill\\program1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{092EA753-E4D5-4054-80F6-2ACD36B96F7C}|ManDrill\\ManDrill.csproj|solutionrelative:mandrill\\program1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|c:\\users\\bhardwajh2\\source\\repos\\mandrill\\mandrill.client\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|solutionrelative:mandrill.client\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|c:\\users\\bhardwajh2\\source\\repos\\mandrill\\mandrill.client\\services\\methodcallextractor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|solutionrelative:mandrill.client\\services\\methodcallextractor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|c:\\users\\bhardwajh2\\source\\repos\\mandrill\\mandrill.client\\helpers\\drawflowmapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|solutionrelative:mandrill.client\\helpers\\drawflowmapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|c:\\users\\bhardwajh2\\source\\repos\\mandrill\\mandrill.client\\services\\aiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|solutionrelative:mandrill.client\\services\\aiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|c:\\users\\bhardwajh2\\source\\repos\\mandrill\\mandrill.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|solutionrelative:mandrill.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|c:\\users\\bhardwajh2\\source\\repos\\mandrill\\mandrill.client\\models\\methodcallinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|solutionrelative:mandrill.client\\models\\methodcallinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|c:\\users\\bhardwajh2\\source\\repos\\mandrill\\mandrill.client\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|solutionrelative:mandrill.client\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|c:\\users\\bhardwajh2\\source\\repos\\mandrill\\mandrill.client\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6692A983-628B-4366-A7C4-8CAF95D6D653}|ManDrill.Client\\ManDrill.Client.csproj|solutionrelative:mandrill.client\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program1.cs",
+              "DocumentMoniker": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill\\Program1.cs",
+              "RelativeDocumentMoniker": "ManDrill\\Program1.cs",
+              "ToolTip": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill\\Program1.cs",
+              "RelativeToolTip": "ManDrill\\Program1.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABEAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-23T12:08:10.105Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MethodCallInfo.cs",
+              "DocumentMoniker": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Models\\MethodCallInfo.cs",
+              "RelativeDocumentMoniker": "ManDrill.Client\\Models\\MethodCallInfo.cs",
+              "ToolTip": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Models\\MethodCallInfo.cs",
+              "RelativeToolTip": "ManDrill.Client\\Models\\MethodCallInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAgAAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T13:50:50.514Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MethodCallExtractor.cs",
+              "DocumentMoniker": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Services\\MethodCallExtractor.cs",
+              "RelativeDocumentMoniker": "ManDrill.Client\\Services\\MethodCallExtractor.cs",
+              "ToolTip": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Services\\MethodCallExtractor.cs",
+              "RelativeToolTip": "ManDrill.Client\\Services\\MethodCallExtractor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAwAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-14T13:43:59.849Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill\\Program.cs",
+              "RelativeDocumentMoniker": "ManDrill\\Program.cs",
+              "ToolTip": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill\\Program.cs",
+              "RelativeToolTip": "ManDrill\\Program.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAoAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T13:16:05.726Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Program.cs",
+              "RelativeDocumentMoniker": "ManDrill.Client\\Program.cs",
+              "ToolTip": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Program.cs",
+              "RelativeToolTip": "ManDrill.Client\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T13:10:42.106Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AIService.cs",
+              "DocumentMoniker": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Services\\AIService.cs",
+              "RelativeDocumentMoniker": "ManDrill.Client\\Services\\AIService.cs",
+              "ToolTip": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Services\\AIService.cs",
+              "RelativeToolTip": "ManDrill.Client\\Services\\AIService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAmwCUAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T05:13:09.706Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "ManDrill.Client\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "ManDrill.Client\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAABUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-12T13:12:03.54Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DrawflowMapper.cs",
+              "DocumentMoniker": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Helpers\\DrawflowMapper.cs",
+              "RelativeDocumentMoniker": "ManDrill.Client\\Helpers\\DrawflowMapper.cs",
+              "ToolTip": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Helpers\\DrawflowMapper.cs",
+              "RelativeToolTip": "ManDrill.Client\\Helpers\\DrawflowMapper.cs",
+              "ViewState": "AgIAALAAAAAAAAAAAAAmwMAAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-12T05:28:18.936Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "ManDrill.Client\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "ManDrill.Client\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAAKIAAAAAAAAAAAAvwG4AAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-11T14:49:04.473Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "ManDrill.Client\\Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Users\\bhardwajh2\\source\\repos\\ManDrill\\ManDrill.Client\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "ManDrill.Client\\Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAADIAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-11T14:48:11.454Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

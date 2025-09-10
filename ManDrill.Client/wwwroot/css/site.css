@@ -1,0 +1,195 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+/* Remove Drawflow's default turquoise & fixed height */
+.drawflow .drawflow-node {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+    /* Let the node auto-size to content */
+    .drawflow .drawflow-node .custom-node {
+        display: block;
+    }
+
+/* Custom dark card style */
+.df-node.custom-node {
+    background: #1e1e1e;
+    color: #e0e0e0;
+    border-radius: 0.5rem;
+    border: 1px solid #333;
+    font-size: 0.85rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    min-width: 180px;
+    max-width: 260px;
+    white-space: normal;
+}
+
+.df-node-title {
+    background: linear-gradient(90deg, #0052cc, #007bff);
+    color: white;
+    font-weight: bold;
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.df-node-body {
+    padding: 8px 10px;
+}
+
+.df-node-field {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #2f2f2f;
+    padding: 2px 0;
+    font-size: 0.8rem;
+}
+
+    .df-node-field span:first-child {
+        font-weight: bold;
+        color: #bbbbbb;
+    }
+
+    .df-node-field span:last-child {
+        color: #e0e0e0;
+        overflow-wrap: anywhere;
+    }
+
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.card {
+    background-color: #1e1e1e;
+    border: none;
+    border-radius: 0.6rem;
+}
+
+.card-header {
+    border-bottom: none;
+    padding: 1rem 1.25rem;
+}
+
+.form-label {
+    color: #bbbbbb;
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+}
+
+.form-control {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border: 1px solid #444;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
+    height: 2rem;
+}
+
+    .form-control:focus {
+        background-color: #2f2f2f;
+        border-color: #66afe9;
+        box-shadow: none;
+    }
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    font-size: 0.9rem;
+    padding: 0.35rem 1.2rem;
+}
+
+    .btn-primary:hover {
+        background-color: #0069d9;
+    }
+
+.btn {
+    border-radius: 0.4rem;
+}
+
+#drawflow {
+    background-color: #181818;
+    border: 1px solid #333;
+    border-radius: 0.4rem;
+}
+
+.card-header.bg-primary {
+    background: linear-gradient(90deg, #0052cc, #007bff);
+}
+
+.card-header.bg-success {
+    background: linear-gradient(90deg, #007b55, #00a86b);
+}
+
+.invalid-feedback {
+    color: #ff6b6b;
+    font-size: 0.85rem;
+}
+
+/* Bright colors and closer dots */
+.drawflow .connection .main-path {
+    stroke-width: 1.5px !important;
+    stroke: #ff6b35 !important; /* Bright orange - very visible */
+}
+
+.drawflow .drawflow-node .input {
+    width: 10px !important;
+    height: 10px !important;
+    border: 2px solid #ff6b35 !important;
+    background: #ff6b35 !important;
+    left: -13px !important; /* CLOSER TO NODE BOX */
+}
+
+.drawflow .drawflow-node .output {
+    width: 10px !important;
+    height: 10px !important;
+    border: 2px solid #ff6b35 !important;
+    background: #ff6b35 !important;
+    right: -2px !important; /* CLOSER TO NODE BOX */
+}
+
+    .drawflow .drawflow-node .output:hover,
+    .drawflow .drawflow-node .input:hover {
+        background: #ff6b35 !important;
+        transform: scale(1.2) !important;
+    }
+
+#analyzerFormCollapseToggle:focus,
+#analyzerFormCollapseToggle:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
