@@ -5,12 +5,12 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ManDrill.Client.Services
 {
-    public class MethodCallExtractor2
+    public class MethodCallExtractor
     {
         private readonly Solution _solution;
         private readonly HashSet<IMethodSymbol> _visited;
 
-        public MethodCallExtractor2(Solution solution)
+        public MethodCallExtractor(Solution solution)
         {
             _solution = solution;
             _visited = new HashSet<IMethodSymbol>(SymbolEqualityComparer.Default);
@@ -33,8 +33,7 @@ namespace ManDrill.Client.Services
 
             foreach (var syntaxRef in methodSymbol.DeclaringSyntaxReferences)
             {
-                var methodNode = syntaxRef.GetSyntax() as MethodDeclarationSyntax;
-                if (methodNode == null) continue;
+                if (await syntaxRef.GetSyntaxAsync() is not MethodDeclarationSyntax methodNode) continue;
 
                 var document = _solution.GetDocument(methodNode.SyntaxTree);
                 if (document == null) continue;

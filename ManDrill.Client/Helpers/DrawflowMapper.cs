@@ -4,14 +4,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using ManDrill.Client.Models;
 
-public class DrawflowNode
-{
-    public string Id { get; set; }
-    public string Name { get; set; }
-    public string Data { get; set; }
-    public List<string> Outputs { get; set; } = new();
-}
-
 public class DrawflowRoot
 {
     [JsonPropertyName("Home")]
@@ -184,13 +176,13 @@ public static class DrawCallMapper
         sb.Append($"<a href='#' class='text-light' onclick=\"document.getElementById('{formId}').submit(); return false;\">{method.Name + "(..)" ?? "Unknown"}</a>");
         sb.Append("</div>");
 
-        // Hidden form for POST
+        // Hidden form for POST - when we click on a child method in flow graph, this hidden form will be submitted to create a new flow chart for that child method. 
         sb.Append($"<form id='{formId}' method='post' action='/Home/Index' style='display:none;'>");
         sb.Append($"<input type='hidden' name='solutionPath' value='{_solutionPath ?? ""}' />");
         sb.Append($"<input type='hidden' name='namespaceName' value='{method.Namespace ?? ""}' />");
         sb.Append($"<input type='hidden' name='methodNameInput' value='{method.Name ?? ""}' />");
         sb.Append($"<input type='hidden' name='className' value='{method.ClassName ?? ""}' />");
-        //sb.Append($"<input type='checkbox' name='includeAISummary' value='true' />");
+        //sb.Append($"<input type='checkbox' name='includeAISummary' value='true' />");// Child method flow chart should not include AI summary by default, we can look into the UI part for this.
         sb.Append("</form>");
 
         // Rest of your node body
