@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.14.0" />
     <PackageReference Include="Mscc.GenerativeAI" Version="2.6.9" />
+    <PackageReference Include="AWSSDK.BedrockRuntime" Version="3.7.400.0" />
   </ItemGroup>
 
 </Project>
