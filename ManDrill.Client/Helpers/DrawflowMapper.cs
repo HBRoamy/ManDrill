@@ -19,7 +19,7 @@ public class HomeData
 public static class DrawCallMapper
 {
     private static string _solutionPath { get; set; }
-    public static string ConvertMethodCallJsonToDrawflow(string methodCallJson, string? summary, string solutionPath)
+    public static string ConvertMethodCallJsonToDrawflow(string methodCallJson, string solutionPath)
     {
         if (string.IsNullOrEmpty(methodCallJson))
         {
@@ -41,56 +41,7 @@ public static class DrawCallMapper
             int nodeCounter = 1;
 
             CreateNodesRecursively(root, nodes, ref nodeCounter, 300, 150);
-            Console.WriteLine(summary);
             // 3. Add summary node (not connected)
-            if (!string.IsNullOrWhiteSpace(summary))
-            {
-                // Replace the summaryNode creation block inside ConvertMethodCallJsonToDrawflow with the following:
-
-                int summaryNodeId = nodeCounter;
-                var summaryNode = new
-                {
-                    id = summaryNodeId,
-                    name = "Summary",
-                    data = new
-                    {
-                        info = summary
-                    },
-                    @class = "summary-node",
-                    // Wrap summary in a scrollable div to prevent overflow
-                    html = $@"
-<div class='df-node custom-node bg-dark text-light border border-secondary rounded'>
-    <div class='df-node-title bg-secondary text-light fw-bold p-2 rounded-top'>
-        Summary
-    </div>
-    <div class='df-node-body p-2'>
-        <div class='df-node-field' 
-             style='max-width:300px; white-space:normal; word-wrap:break-word; overflow:visible;'>
-            {summary}
-        </div>
-    </div>
-</div>",
-                    typenode = false,
-                    inputs = new
-                    {
-                        input_1 = new
-                        {
-                            connections = new List<object>()
-                        }
-                    },
-                    outputs = new
-                    {
-                        output_1 = new
-                        {
-                            connections = new List<object>()
-                        }
-                    },
-                    pos_x = 1000,
-                    pos_y = 20
-                };
-                nodes[summaryNodeId] = summaryNode;
-                nodeCounter++;
-            }
 
             // 4. Create proper Drawflow structure
             var drawflowStructure = new

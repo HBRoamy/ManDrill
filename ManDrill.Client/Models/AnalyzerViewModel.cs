@@ -22,6 +22,8 @@ namespace ManDrill.Client.Models
 
         public string JsonOutput { get; set; }
 
+        public string AISummary { get; set; } = string.Empty;
+
         public bool IncludeAISummary { get; set; }
     }
 }

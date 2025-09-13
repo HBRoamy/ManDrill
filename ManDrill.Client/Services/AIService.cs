@@ -55,7 +55,7 @@ namespace ManDrill.Client.Services
         /// or "Method summary unavailable" if generation fails
         /// </returns>
         /// <exception cref="ArgumentNullException">Thrown when methodSymbol is null</exception>
-        public async Task<string?> GenerateMethodSummary(IMethodSymbol methodSymbol)
+        public async Task<string?> GenerateMethodSummary(IMethodSymbol methodSymbol, string json)
         {
             if (methodSymbol == null)
                 throw new ArgumentNullException(nameof(methodSymbol));
@@ -67,11 +67,8 @@ namespace ManDrill.Client.Services
                 if (string.IsNullOrEmpty(methodBody))
                     return "Method implementation not available";
 
-                // Obfuscate any sensitive data in the method body
-                var obfuscatedBody = ObfuscateOrgData(methodBody);
-
                 // Create the prompt for Claude
-                var prompt = CreateAnalysisPrompt(methodSymbol, obfuscatedBody);
+                var prompt = CreateAnalysisPrompt(methodSymbol, methodBody, json);
 
                 // Generate the summary using Claude
                 var summary = await GenerateSummaryWithClaude(prompt);
@@ -108,9 +105,9 @@ namespace ManDrill.Client.Services
         /// Creates the analysis prompt for Claude
         /// </summary>
         /// <param name="methodSymbol">The method symbol being analyzed</param>
-        /// <param name="obfuscatedBody">The obfuscated method implementation</param>
+        /// <param name="methodBody">The obfuscated method implementation</param>
         /// <returns>The formatted prompt string</returns>
-        private string CreateAnalysisPrompt(IMethodSymbol methodSymbol, string obfuscatedBody)
+        private string CreateAnalysisPrompt(IMethodSymbol methodSymbol, string methodBody, string methodCallJson)
         {
             return $"""
 You are analyzing a C# method for a code visualization tool. Create a HTML summary that will be displayed inside a data flow graph node.
@@ -118,29 +115,64 @@ You are analyzing a C# method for a code visualization tool. Create a HTML summa
 CRITICAL: Your response must be ONLY the HTML content. DO NOT wrap in markdown code blocks. DO NOT use ``` markers. DO NOT add any explanatory text.
 
 REQUIREMENTS:
-- Around 150-200 words total
+- Around 300-400 words total
 - Use Bootstrap 5 dark theme classes (bg-dark, text-light, text-info, text-warning)
 - Structure as a compact card layout
 - Must fit in a 300px wide node
 - Start immediately with <div class="bg-dark...
+- Green	#34D399
+- Blue #60A5FA
+- Yellow #FACC15
+- Red #F87171
+- Purple #A78BFA
+- Gray #9CA3AF
 
 METHOD TO ANALYZE:
 Signature: {methodSymbol}
 Implementation:
-{obfuscatedBody}
+{methodBody}
 
 YOUR RESPONSE MUST START WITH: <div class="bg-dark text-light p-2 rounded">
 
 TEMPLATE TO FOLLOW EXACTLY:
 <div class="bg-dark text-light p-2 rounded">
-    <div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Purpose</div>
-    <div class="mb-2" style="font-size: 0.8rem;">[1-2 sentences about what this method does]</div>
     
-    <div class="text-warning fw-bold mb-1" style="font-size: 0.85rem;">Key Operations</div>
-    <div class="mb-2" style="font-size: 0.8rem;">[2-3 bullet points with • symbol, each max 8 words]</div>
-    
-    <div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Parameters</div>
-    <div style="font-size: 0.8rem;">[List important parameters only, max 3]</div>
+<h3 class="h3 text-warning fw-bold mb-1 text-center">[Title in 2-3 words]</h3>
+<hr class="border-white" />
+<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Business Context</div>
+<div style="font-size: 0.8rem;">[4–6 non-technical sentences about what this method achieves in business terms, why it matters, and when it is used.]</div>
+
+<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Technical Context</div>
+<div class="mb-2" style="font-size: 0.8rem;">[4–6 sentences describing the method’s purpose, logic, and role in the overall system. Mention dependencies, data flow, or critical considerations.]</div>
+
+<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Key Operations</div>
+<div class="mb-2" style="font-size: 0.8rem;">[6–7 bullet points with • symbol, each max 8 words, highlighting the main operations or transformations done by this method.]</div>
+
+<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Flow Diagram</div>
+<div style="font-size: 0.8rem;">
+  [Generate a visually clear, centrally-aligned, colorful, and professional-looking HTML-based flowchart from the given <code>{methodCallJson}</code>. 
+  Requirements:
+  <ul>
+    <li>Color-coded nodes (input, process, output, decision). Colors are provided above</li>
+    <li>Directional arrows to indicate execution flow.Should touch nodes, not overflow it.</li>
+    <li>Readable text labels, short and concise.</li>
+    <li>Responsive and scrollable for large diagrams.</li>
+    <li>No emojis, clean professional look.</li>
+  </ul>]
+</div>
+
+<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Parameters</div>
+<div style="font-size: 0.8rem;">[List only the 2–3 most important parameters with short explanations (1 line each).]</div>
+
+<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Dependencies</div>
+<div style="font-size: 0.8rem;">[Mention, in bullet points with • symbol, internal/external libraries, services, or methods this depends on.]</div>
+
+<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Performance Notes</div>
+<div style="font-size: 0.8rem;">[Highlight any performance-sensitive logic, caching, or scalability concerns.]</div>
+
+<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Conclusion</div>
+<div style="font-size: 0.8rem;">[Meaningful conclusion of the document in 3-4 sentences.]</div>
+
 </div>
 
 REMEMBER: No markdown, no code blocks, no explanations. Just the HTML starting with <div class="bg-dark...
@@ -158,7 +190,7 @@ REMEMBER: No markdown, no code blocks, no explanations. Just the HTML starting w
             var requestBody = new
             {
                 anthropic_version = "bedrock-2023-05-31",
-                max_tokens = 1000,
+                max_tokens = 10000,
                 temperature = 0.1,
                 messages = new[]
                 {
@@ -187,34 +219,6 @@ REMEMBER: No markdown, no code blocks, no explanations. Just the HTML starting w
             var responseData = JsonSerializer.Deserialize<JsonElement>(responseJson);
             return responseData.GetProperty("content")[0].GetProperty("text").GetString() ?? "Summary generation failed";
         }
-
-        /// <summary>
-        /// Obfuscates organization-specific data in method implementations to protect sensitive information
-        /// </summary>
-        /// <param name="input">The input string to obfuscate</param>
-        /// <returns>The obfuscated string with sensitive data replaced with generic placeholders</returns>
-        private static string ObfuscateOrgData(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-                return input;
-
-            // Replace common organization-related keywords with generic placeholders
-            var orgKeywords = new[] { "corp", "company", "org", "enterprise", "business", "firm", "AdminPortal", "Par", "Partech", "Parcorp", "UpgradePortal" };
-            var pattern = string.Join("|", orgKeywords);
-            var regex = new Regex($@"\b({pattern})\b", RegexOptions.IgnoreCase);
-
-            // Obfuscate namespace declarations and usages
-            var namespaceRegex = new Regex(@"namespace\s+([A-Za-z0-9_.]+)", RegexOptions.IgnoreCase);
-            input = namespaceRegex.Replace(input, "namespace [REDACTED_NAMESPACE]");
-
-            // Obfuscate namespace-like structures that might contain org names
-            input = regex.Replace(input, match => "[REDACTED]")
-                         .Replace("Company.", "Namespace.")
-                         .Replace("Corp.", "Namespace.");
-
-            return input;
-        }
-
         #endregion
     }
 }
