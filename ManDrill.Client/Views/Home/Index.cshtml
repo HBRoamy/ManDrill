@@ -1,56 +1,206 @@
 ﻿@model AnalyzerViewModel
 
+<style>
+    /* ManDrill Custom Theme - Modern Gradient & 3D Depth */
+    .mdr-card {
+        background: linear-gradient(145deg, #232526 0%, #2d2d2d 100%);
+        border: 1px solid #353535;
+        box-shadow: 0 8px 32px 0 rgba(0,0,0,0.25), 0 1.5px 6px 0 rgba(0,0,0,0.18);
+        border-radius: 16px;
+    }
+
+    .mdr-card-header {
+        background: linear-gradient(90deg, #0f2027 0%, #2c5364 100%);
+        border-bottom: 1.5px solid #1a1a1a;
+        box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+    }
+
+    .mdr-title {
+        color: #2de38c;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.18);
+    }
+
+    .mdr-card-body {
+        background: linear-gradient(135deg, #232526 0%, #313131 100%);
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+    }
+
+    .mdr-form {
+        color: #e0e0e0;
+    }
+
+    .mdr-label {
+        color: #2de38c;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.10);
+    }
+
+    .mdr-input {
+        background: linear-gradient(90deg, #232526 0%, #353535 100%);
+        border: 1.5px solid #444;
+        color: #e0e0e0 !important;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.10);
+    }
+
+    .mdr-input:focus {
+        background: linear-gradient(90deg, #232526 0%, #353535 100%);
+        border-color: #2de38c;
+        box-shadow: 0 0 0 0.2rem rgba(45, 227, 140, 0.18);
+    }
+
+    .mdr-checkbox {
+        background-color: #232526;
+        border-color: #444;
+    }
+    .mdr-checkbox:checked {
+        background-color: #2de38c;
+        border-color: #2de38c;
+    }
+    .mdr-checkbox-label {
+        color: #2de38c;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.10);
+    }
+
+    .mdr-submit-btn {
+        background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%) !important;
+        border: none !important;
+        color: #fff !important;
+        font-weight: 600;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px 0 rgba(56,239,125,0.10);
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+    .mdr-submit-btn:hover {
+        background: linear-gradient(90deg, #38ef7d 0%, #11998e 100%) !important;
+        box-shadow: 0 4px 16px 0 rgba(56,239,125,0.18);
+    }
+
+    .mdr-toggle-btn {
+        color: #2de38c !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.10);
+    }
+    .mdr-toggle-btn:hover {
+        color: #11998e !important;
+    }
+    .mdr-bg{
+        background: linear-gradient(135deg, #7b2ff7, #00c6ff);
+    }
+
+    .ai-summary-button {
+        display: inline-flex;
+        align-items: center;
+        border: none;
+        padding: 10px 20px 10px 5px;
+        cursor: pointer;
+        background: none;
+        position: relative;
+        font-size: 16px;
+        overflow: hidden;
+        border-radius: 30px;
+    }
+
+    .ai-summary-background {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 50px;
+        background: linear-gradient(135deg, #7b2ff7, #00c6ff);
+        z-index: 0;
+        transition: width 0.4s ease;
+        border-radius: 30px;
+    }
+
+    .ai-summary-button:hover .ai-summary-background {
+        width: 100%;
+    }
+
+    .ai-summary-content {
+        display: flex;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+        color: white;
+    }
+
+    .ai-summary-logo-text {
+        display: flex;
+        align-items: center;
+    }
+
+    .ai-summary-button svg {
+        margin-right: 5px;
+        margin-top: 5px;
+    }
+
+    .ai-summary-button span {
+        white-space: nowrap;
+        opacity: 0;
+        transform: translateX(10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .ai-summary-button:hover span {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+</style>
+
 <div class="container mt-5">
-    <div class="card shadow-lg">
-        <div class="card-header bg-primary rounded-bottom-1 text-white d-flex justify-content-between align-items-center py-2">
+    <div class="card shadow-lg mdr-card">
+        <div class="card-header mdr-bg rounded-bottom-1 text-white d-flex justify-content-between align-items-center py-2 mdr-card-header">
             <h2 class="h5 mb-0">Method Analyzer</h2>
             <button id="analyzerFormCollapseToggle"
-                    class="btn p-0 border-0 bg-transparent"
+                    class="btn p-0 border-0 bg-transparent mdr-toggle-btn"
                     data-bs-toggle="collapse"
                     data-bs-target="#analyzerFormCollapse"
                     aria-expanded="true"
                     aria-controls="analyzerFormCollapse"
                     title="Toggle Analyzer Form">
-                <svg id="chevronIcon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" style="transition: transform 0.2s;">
+                <svg id="chevronIcon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" viewBox="0 0 16 16" style="transition: transform 0.2s;">
                     <path fill-rule="evenodd" d="M1.646 5.646a.5.5 0 0 1 .708 0L8 11.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
                 </svg>
             </button>
         </div>
 
-        <div class="card-body collapse show" id="analyzerFormCollapse">
+        <div class="card-body collapse show mdr-card-body" id="analyzerFormCollapse">
 
             <div>
-                <form method="post" class="needs-validation" novalidate>
+                <form method="post" class="needs-validation mdr-form" novalidate>
                     <div class="mb-2">
-                        <label class="form-label fw-bold" for="solutionPath">Solution Path</label>
-                        <input type="text" class="form-control text-light form-control-sm" id="solutionPath" name="solutionPath" value="@Model.SolutionPath" required />
+                        <label class="form-label fw-bold mdr-label" for="solutionPath">Solution Path</label>
+                        <input type="text" class="form-control form-control-sm mdr-input" id="solutionPath" name="solutionPath" value="@Model.SolutionPath" required />
                         <div class="invalid-feedback text-danger">Please provide a solution path.</div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-2">
-                            <label class="form-label fw-bold" for="namespaceName">Namespace</label>
-                            <input type="text" class="form-control text-light form-control-sm" id="namespaceName" name="namespaceName" value="@Model.NamespaceName" />
+                            <label class="form-label fw-bold mdr-label" for="namespaceName">Namespace</label>
+                            <input type="text" class="form-control form-control-sm mdr-input" id="namespaceName" name="namespaceName" value="@Model.NamespaceName" />
                         </div>
 
                         <div class="col-md-6 mb-2">
-                            <label class="form-label fw-bold" for="className">Class Name</label>
-                            <input type="text" class="form-control text-light form-control-sm" id="className" name="className" value="@Model.ClassName" />
+                            <label class="form-label fw-bold mdr-label" for="className">Class Name</label>
+                            <input type="text" class="form-control form-control-sm mdr-input" id="className" name="className" value="@Model.ClassName" />
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold" for="methodNameInput">Method Name</label>
-                        <input type="text" class="form-control text-light form-control-sm" id="methodNameInput" name="methodNameInput" value="@Model.MethodName" />
+                        <label class="form-label fw-bold mdr-label" for="methodNameInput">Method Name</label>
+                        <input type="text" class="form-control form-control-sm mdr-input" id="methodNameInput" name="methodNameInput" value="@Model.MethodName" />
                     </div>
 
                     <div class="mb-3 form-check">
                         <input type="checkbox"
-                               class="form-check-input"
+                               class="form-check-input mdr-checkbox"
                                id="includeAISummary"
                                name="includeAISummary"
                         @(Model.IncludeAISummary ? "checked" : "") value="true" />
-                        <label class="form-check-label fw-bold text-light" for="includeAISummary">
+                        <label class="form-check-label fw-bold mdr-checkbox-label" for="includeAISummary">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                 <!-- Large star -->
                                 <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162z" />
@@ -61,7 +211,7 @@
                         </label>
                     </div>
 
-                    <button type="submit" class="btn btn-success px-3 py-1" id="generateGraphBtn">
+                    <button type="submit" class="btn px-3 py-1 mdr-submit-btn" id="generateGraphBtn">
                         <span id="loaderSpinner" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" style="display:none;"></span>
                         Generate Graph
                     </button>
@@ -93,15 +243,23 @@
             <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
                 <h3 class="h5 mb-0">Visualization</h3>
                 <div>
-                    <button class="btn btn-outline-info me-1 bg-transparent text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                            <!-- Large star -->
-                            <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162z" />
-                            <!-- Small star -->
-                            <path d="M13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
-                        </svg> Summary
-                    </button>
-                    <button id="fullscreenToggle"
+                    @if (!Model.IncludeAISummary)
+                    {
+                        <button class="ai-summary-button" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+                            <div class="ai-summary-background"></div>
+                            <div class="ai-summary-content">
+                                <div class="ai-summary-logo-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162z" />
+                                        <path d="M13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+                                    </svg>
+                                </div>
+                                <span>AI Summary</span>
+                            </div>
+
+                        </button>
+                    }
+                    @* <button id="fullscreenToggle"
                             class="btn p-0 border-0 bg-transparent text-white"
                             title="Toggle Fullscreen"
                             style="opacity: 0.8;">
@@ -109,7 +267,7 @@
                             <!-- Expand icon (default) -->
                             <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z" />
                         </svg>
-                    </button>
+                    </button> *@
                 </div>
             </div>
             <div class="card-body p-2">
