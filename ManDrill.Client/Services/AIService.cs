@@ -1,8 +1,10 @@
-﻿using System.Text.RegularExpressions;
-using System.Text.Json;
-using Microsoft.CodeAnalysis;
-using Amazon.BedrockRuntime;
+﻿using Amazon.BedrockRuntime;
 using Amazon.BedrockRuntime.Model;
+using ManDrill.Client.Models;
+using Microsoft.CodeAnalysis;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 
 namespace ManDrill.Client.Services
 {
@@ -17,7 +19,18 @@ namespace ManDrill.Client.Services
         /// The Amazon Bedrock runtime client for making API calls to Claude
         /// </summary>
         private readonly AmazonBedrockRuntimeClient _bedrockClient;
-
+        /// <summary>
+        /// Atlassian Domain name
+        /// </summary>
+        private readonly string _domain = "test.atlassian.net";
+        /// <summary>
+        /// Email address of registered atlassian account
+        /// </summary>
+        private readonly string _email = "your.email@gmail.com"; 
+        /// <summary>
+        /// API Token of atlassian account
+        /// </summary>
+        private readonly string _apiToken = "";
         /// <summary>
         /// The Claude model ID to use for generating summaries
         /// </summary>
@@ -109,74 +122,38 @@ namespace ManDrill.Client.Services
         /// <returns>The formatted prompt string</returns>
         private string CreateAnalysisPrompt(IMethodSymbol methodSymbol, string methodBody, string methodCallJson)
         {
+            var jsonTemplate = """
+            {
+                "Title": "2-3 word summary",
+                "BusinessContext": "4-6 non-technical sentences about what this method achieves in business terms, why it matters, and when it is used",
+                "TechnicalContext": "4-6 sentences describing the method's purpose, logic, and role in the overall system. Mention dependencies, data flow, or critical considerations",
+                "KeyOperations": ["6-7 items each max 8 words highlighting main operations or transformations done by this method"],
+                "FlowDiagram": "Create a clean, professional HTML flowchart from JSON with color-coded nodes (input, process, output, decision), clear labels, and directional arrows touching nodes. Centered, responsive, no emojis. And make sure the svg should have enough height to display whole flow diagram and text should be fit within the rectangle and also should not override on eachother.",
+                "Parameters": {"paramName": "explanation", "anotherParam": "explanation"},
+                "Dependencies": ["list of internal/external libraries, services or methods this depends on"],
+                "PerformanceNotes": "Highlight any performance-sensitive logic, caching, or scalability concerns",
+                "Conclusion": "Meaningful conclusion in 3-4 sentences"
+            }
+            """;
+
             return $"""
-You are analyzing a C# method for a code visualization tool. Create a HTML summary that will be displayed inside a data flow graph node.
+                You are analyzing a C# method for a code visualization tool. Create a detailed analysis in JSON format.DO NOT wrap in markdown code blocks. DO NOT use ``` markers. DO NOT add any explanatory text.
 
-CRITICAL: Your response must be ONLY the HTML content. DO NOT wrap in markdown code blocks. DO NOT use ``` markers. DO NOT add any explanatory text.
+                CRITICAL: Your response must be ONLY valid JSON. Do not include any explanatory text or markdown.
 
-REQUIREMENTS:
-- Around 300-400 words total
-- Use Bootstrap 5 dark theme classes (bg-dark, text-light, text-info, text-warning)
-- Structure as a compact card layout
-- Must fit in a 300px wide node
-- Start immediately with <div class="bg-dark...
-- Green	#34D399
-- Blue #60A5FA
-- Yellow #FACC15
-- Red #F87171
-- Purple #A78BFA
-- Gray #9CA3AF
+                The response should follow this exact JSON structure:
+                {jsonTemplate}
 
-METHOD TO ANALYZE:
-Signature: {methodSymbol}
-Implementation:
-{methodBody}
+                METHOD TO ANALYZE:
+                Signature: {methodSymbol}
+                Implementation:
+                {methodBody}
 
-YOUR RESPONSE MUST START WITH: <div class="bg-dark text-light p-2 rounded">
+                Flow Data:
+                {methodCallJson}
 
-TEMPLATE TO FOLLOW EXACTLY:
-<div class="bg-dark text-light p-2 rounded">
-    
-<h3 class="h3 text-warning fw-bold mb-1 text-center">[Title in 2-3 words]</h3>
-<hr class="border-white" />
-<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Business Context</div>
-<div style="font-size: 0.8rem;">[4–6 non-technical sentences about what this method achieves in business terms, why it matters, and when it is used.]</div>
-
-<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Technical Context</div>
-<div class="mb-2" style="font-size: 0.8rem;">[4–6 sentences describing the method’s purpose, logic, and role in the overall system. Mention dependencies, data flow, or critical considerations.]</div>
-
-<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Key Operations</div>
-<div class="mb-2" style="font-size: 0.8rem;">[6–7 bullet points with • symbol, each max 8 words, highlighting the main operations or transformations done by this method.]</div>
-
-<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Flow Diagram</div>
-<div style="font-size: 0.8rem;">
-  [Generate a visually clear, centrally-aligned, colorful, and professional-looking HTML-based flowchart from the given <code>{methodCallJson}</code>. 
-  Requirements:
-  <ul>
-    <li>Color-coded nodes (input, process, output, decision). Colors are provided above</li>
-    <li>Directional arrows to indicate execution flow.Should touch nodes, not overflow it.</li>
-    <li>Readable text labels, short and concise.</li>
-    <li>Responsive and scrollable for large diagrams.</li>
-    <li>No emojis, clean professional look.</li>
-  </ul>]
-</div>
-
-<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Parameters</div>
-<div style="font-size: 0.8rem;">[List only the 2–3 most important parameters with short explanations (1 line each).]</div>
-
-<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Dependencies</div>
-<div style="font-size: 0.8rem;">[Mention, in bullet points with • symbol, internal/external libraries, services, or methods this depends on.]</div>
-
-<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Performance Notes</div>
-<div style="font-size: 0.8rem;">[Highlight any performance-sensitive logic, caching, or scalability concerns.]</div>
-
-<div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Conclusion</div>
-<div style="font-size: 0.8rem;">[Meaningful conclusion of the document in 3-4 sentences.]</div>
-
-</div>
-
-REMEMBER: No markdown, no code blocks, no explanations. Just the HTML starting with <div class="bg-dark...
-""";
+                REMEMBER: Return ONLY the JSON object, no additional text or formatting.
+                """;
         }
 
         /// <summary>
@@ -217,7 +194,107 @@ REMEMBER: No markdown, no code blocks, no explanations. Just the HTML starting w
             var responseJson = await reader.ReadToEndAsync();
             
             var responseData = JsonSerializer.Deserialize<JsonElement>(responseJson);
-            return responseData.GetProperty("content")[0].GetProperty("text").GetString() ?? "Summary generation failed";
+            var aiResponse = responseData.GetProperty("content")[0].GetProperty("text").GetString();
+
+            if (string.IsNullOrEmpty(aiResponse))
+                return "Summary generation failed";
+
+            try
+            {
+                // Parse the AI response into our model
+                var summaryResponse = JsonSerializer.Deserialize<MethodSummaryResponse>(aiResponse);
+                
+                return GenerateHtmlFromFile(summaryResponse, "wwwroot/pdf-template.html");
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Error parsing AI response: {ex.Message}");
+                return "Error parsing AI response";
+            }
+        }
+
+        public async Task<string> CreateDraftPage(string htmlContent)
+        {
+            string confluenceUrl = $"https://{_domain}/wiki/rest/api/content";
+            using var client = new HttpClient();
+            // Basic Auth
+            var authToken = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_email}:{_apiToken}"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            // Payload
+            var payload = new
+            {
+                type = "page",
+                title = "ManDrill Testing",
+                space = new { key = "Mavericks" },
+                status = "draft",
+                ancestors = new[]
+                {
+                    new { id = 6844416004 } // Set parent page ID here
+                },
+                body = new
+                {
+                    storage = new
+                    {
+                        value = htmlContent,
+                        representation = "storage"
+                    }
+                }
+            };
+            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            string jsonPayload = JsonSerializer.Serialize(payload, options);
+            var response = await client.PostAsync(confluenceUrl, new StringContent(jsonPayload, Encoding.UTF8, "application/json"));
+            if (!response.IsSuccessStatusCode)
+            {
+                string error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Failed to create draft page: {error}");
+            }
+
+            // Parse the response to get the page URL
+            string responseContent = await response.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(responseContent);
+            string relativeLink = doc.RootElement.GetProperty("_links").GetProperty("webui").GetString();
+            string fullPageUrl = $"https://{_domain}/wiki{relativeLink}";
+
+            Console.WriteLine("Draft Confluence page created at: " + fullPageUrl);
+
+            return fullPageUrl;
+
+        }
+
+        public static string GenerateHtmlFromFile(MethodSummaryResponse model, string templatePath)
+        {
+            // Read template from file
+            string template = File.ReadAllText(templatePath);
+            // Replace simple placeholders
+            template = template.Replace("[Title]", model.Title ?? "")
+                               .Replace("[BusinessContext]", model.BusinessContext ?? "")
+                               .Replace("[TechnicalContext]", model.TechnicalContext ?? "")
+                               .Replace("[FlowDiagram]", model.FlowDiagram ?? "")
+                               .Replace("[PerformanceNotes]", model.PerformanceNotes ?? "")
+                               .Replace("[Conclusion]", model.Conclusion ?? "");
+            // Build KeyOperations
+            var keyOps = new StringBuilder();
+            foreach (var op in model.KeyOperations)
+            {
+                keyOps.AppendLine($"<li>{op}</li>");
+            }
+            template = template.Replace("[KeyOperations]", keyOps.ToString());
+            // Build Parameters table rows
+            var paramRows = new StringBuilder();
+            foreach (var param in model.Parameters)
+            {
+                paramRows.AppendLine($"<tr><td>{param.Key}</td><td>{param.Value}</td></tr>");
+            }
+            template = template.Replace("[Parameters]", paramRows.ToString());
+            // Build Dependencies
+            var deps = new StringBuilder();
+            foreach (var dep in model.Dependencies)
+            {
+                deps.AppendLine($"<li>{dep}</li>");
+            }
+            template = template.Replace("[Dependencies]", deps.ToString());
+            return template;
         }
         #endregion
     }

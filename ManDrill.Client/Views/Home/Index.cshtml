@@ -107,7 +107,7 @@
         left: 0;
         top: 0;
         bottom: 0;
-        width: 50px;
+        width: 100%;
         background: linear-gradient(135deg, #7b2ff7, #00c6ff);
         z-index: 0;
         transition: width 0.4s ease;
@@ -136,17 +136,6 @@
         margin-top: 5px;
     }
 
-    .ai-summary-button span {
-        white-space: nowrap;
-        opacity: 0;
-        transform: translateX(10px);
-        transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-
-    .ai-summary-button:hover span {
-        opacity: 1;
-        transform: translateX(0);
-    }
 
 </style>
 
@@ -259,15 +248,6 @@
 
                         </button>
                     }
-                    @* <button id="fullscreenToggle"
-                            class="btn p-0 border-0 bg-transparent text-white"
-                            title="Toggle Fullscreen"
-                            style="opacity: 0.8;">
-                        <svg id="fullscreenIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <!-- Expand icon (default) -->
-                            <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z" />
-                        </svg>
-                    </button> *@
                 </div>
             </div>
             <div class="card-body p-2">
@@ -276,123 +256,171 @@
         </div>
     </div>
 
-
-<div class="offcanvas offcanvas-end bg-dark text-light" style="--bs-offcanvas-width: 600px;" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-  <div class="offcanvas-header border-bottom border-secondary">
-    <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">AI Summary</h5>
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <p>@Html.Raw(Model.AISummary)</p>
-  </div>
-</div>
+    <div class="offcanvas offcanvas-end bg-dark text-light" style="--bs-offcanvas-width: 60%;" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas-header border-bottom border-secondary d-flex justify-content-between align-items-center">
+            <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">AI Summary</h5>
+            <div class="d-flex gap-2 align-items-center">
+                <button type="button" class="btn btn-outline-success btn-sm" id="downloadPdfBtn" title="Download as PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-pdf" viewBox="0 0 16 16">
+                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                        <path d="M4.603 14.087a.81.81 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.68 7.68 0 0 1 1.482-.645 19.701 19.701 0 0 0 1.062-2.227 7.269 7.269 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a10.954 10.954 0 0 0 .98 1.686 5.753 5.753 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.856.856 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.716 5.716 0 0 1-.911-.95 11.642 11.642 0 0 0-1.997.406 11.311 11.311 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.793.793 0 0 1-.58.029zm1.379-1.901c-.166.076-.32.156-.459.238-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361.01.022.02.036.026.044a.27.27 0 0 0 .035-.012c.137-.056.355-.235.635-.572a8.18 8.18 0 0 0 .45-.606zm1.64-1.33a12.647 12.647 0 0 1 1.01-.193 11.666 11.666 0 0 1-.51-.858 20.741 20.741 0 0 1-.5 1.05zm2.446.45c.15.162.296.3.435.41.24.19.407.253.498.256a.107.107 0 0 0 .07-.015.307.307 0 0 0 .094-.125.436.436 0 0 0 .059-.2.095.095 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a3.881 3.881 0 0 0-.612-.053zM8.078 7.8a6.7 6.7 0 0 0 .2-.828c.031-.188.043-.343.038-.465a.613.613 0 0 0-.032-.198.517.517 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822.024.111.054.227.09.346z"/>
+                    </svg>
+                    <span class="ms-1">Download PDF</span>
+                </button>
+                <button type="button" class="btn btn-outline-primary btn-sm" id="createConfluenceBtn" title="Create in Confluence">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8.293 1.293a1 1 0 0 1 1.414 0l6 6a1 1 0 0 1 0 1.414l-6 6a1 1 0 0 1-1.414-1.414L13.586 8 8.293 2.707a1 1 0 0 1 0-1.414z"/>
+                        <path d="M7.293 1.293a1 1 0 0 0-1.414 0l-6 6a1 1 0 0 0 0 1.414l6 6a1 1 0 0 0 1.414-1.414L2.414 8l4.879-4.879a1 1 0 0 0 0-1.414z"/>
+                    </svg>
+                    <span class="ms-1">Create Confluence Page</span>
+                </button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="offcanvas-body">
+            <p>@Html.Raw(Model.AISummary)</p>
+        </div>
+    </div>
 
     @section Scripts {
-    <script>
-		//In the scripts, we are ensuring that the form validation, drawflow initialization, fullscreen toggle, and progress reporting are all handled properly.
-		//Also, we collapse the form on page load to focus on the visualization.
-        document.addEventListener('DOMContentLoaded', function () {
-            const editor = new Drawflow(document.getElementById('drawflow'));
-            // editor.editor_mode = 'view';
-            editor.reroute = true;
-            editor.reroute_fix_curvature = true;
-            editor.curvature = 0.5;
+        <!-- Add html2pdf.js library -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const editor = new Drawflow(document.getElementById('drawflow'));
+                editor.reroute = true;
+                editor.reroute_fix_curvature = true;
+                editor.curvature = 0.5;
 
-            const data = @Html.Raw(Model.JsonOutput);
-            console.log(data);
-            editor.start();
-            editor.import(data);
-                            setTimeout(() => {
-            editor.zoom = 0.8;
-            editor.canvas_x = -100;
-            editor.canvas_y = -50;
-            editor.zoom_refresh();
+                const data = @Html.Raw(Model.JsonOutput);
+                editor.start();
+                editor.import(data);
 
-            // Collapse the form
-            const collapseEl = document.getElementById('analyzerFormCollapse');
-            bootstrap.Collapse.getOrCreateInstance(collapseEl).hide();
-          }, 100);
-
-            // Fullscreen functionality
-            const fullscreenToggle = document.getElementById('fullscreenToggle');
-            const drawflowDiv = document.getElementById('drawflow');
-            const fullscreenIcon = document.getElementById('fullscreenIcon');
-
-            // Icons for fullscreen states
-            const expandIcon = `<path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"/>`;
-            const compressIcon = `<path d="M5.5 0a.5.5 0 0 1 .5.5v4A1.5 1.5 0 0 1 4.5 6h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5zm5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 10 4.5v-4a.5.5 0 0 1 .5-.5zM0 10.5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 6 11.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zm10 1a1.5 1.5 0 0 1 1.5-1.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4z"/>`;
-
-            fullscreenToggle.addEventListener('click', function() {
-                if (!document.fullscreenElement) {
-                    // Enter fullscreen
-                    drawflowDiv.requestFullscreen().then(() => {
-                        fullscreenIcon.innerHTML = compressIcon;
-                        fullscreenToggle.title = "Exit Fullscreen";
-
-                        // Adjust drawflow for fullscreen
-                        drawflowDiv.style.height = '100vh';
-                        editor.zoom_refresh();
-                    }).catch(err => {
-                        console.error('Error entering fullscreen:', err);
-                    });
-                } else {
-                    // Exit fullscreen
-                    document.exitFullscreen().then(() => {
-                        fullscreenIcon.innerHTML = expandIcon;
-                        fullscreenToggle.title = "Toggle Fullscreen";
-
-                        // Restore original height
-                        drawflowDiv.style.height = '70vh';
-                        editor.zoom_refresh();
-                    }).catch(err => {
-                        console.error('Error exiting fullscreen:', err);
-                    });
-                }
-            });
-
-            // Listen for fullscreen changes (ESC key, etc.)
-            document.addEventListener('fullscreenchange', function() {
-                if (!document.fullscreenElement) {
-                    fullscreenIcon.innerHTML = expandIcon;
-                    fullscreenToggle.title = "Toggle Fullscreen";
-                    drawflowDiv.style.height = '70vh';
+                setTimeout(() => {
+                    editor.zoom = 0.8;
+                    editor.canvas_x = -100;
+                    editor.canvas_y = -50;
                     editor.zoom_refresh();
-                }
-            });
-        });
 
-         document.addEventListener('DOMContentLoaded', function () {
-                            const form = document.querySelector('form.needs-validation');
-                            const btn = document.getElementById('generateGraphBtn');
-                            const spinner = document.getElementById('loaderSpinner');
-                            const searchIcon = document.getElementById('searchIcon');
+                    // Collapse the form
+                    const collapseEl = document.getElementById('analyzerFormCollapse');
+                    bootstrap.Collapse.getOrCreateInstance(collapseEl).hide();
+                }, 100);
 
-                            form.addEventListener('submit', function () {
-                                btn.disabled = true;
-                                spinner.style.display = 'inline-block';
-                                searchIcon.style.display = 'none';
-                            });
+                // PDF Download functionality
+                document.getElementById('downloadPdfBtn').addEventListener('click', function() {
+                    const original = document.querySelector('.offcanvas-body');
+                    // Clone the content to avoid picking up offcanvas styles
+                    const clone = original.cloneNode(true);
+                    // Remove all classes and inline styles
+                    clone.removeAttribute('class');
+                    clone.removeAttribute('style');
+                    // Set a white background and padding for PDF
+                    clone.style.background = '#fff';
+                    clone.style.color = '#222';
+                    clone.style.padding = '24px';
+                    clone.style.width = 'auto';
+                    clone.style.maxWidth = '700px';
+                    clone.style.boxSizing = 'border-box';
+
+                    // Create a container for the PDF content
+                    const container = document.createElement('div');
+                    container.appendChild(clone);
+                    document.body.appendChild(container);
+
+                    const opt = {
+                        margin: 0.5,
+                        filename: 'ai-summary.pdf',
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: {
+                            scale: 2,
+                            useCORS: true,
+                            logging: false,
+                            backgroundColor: '#fff'
+                        },
+                        jsPDF: {
+                            unit: 'in',
+                            format: 'A4',
+                            orientation: 'portrait'
+                        }
+                    };
+
+                    // Show loading state
+                    const btn = this;
+                    const originalContent = btn.innerHTML;
+                    btn.innerHTML = `
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span class="ms-1">Generating PDF...</span>
+                    `;
+                    btn.disabled = true;
+
+                    html2pdf().set(opt).from(clone).save().then(() => {
+                        btn.innerHTML = originalContent;
+                        btn.disabled = false;
+                        document.body.removeChild(container);
+                    }).catch(() => {
+                        btn.innerHTML = originalContent;
+                        btn.disabled = false;
+                        document.body.removeChild(container);
+                    });
+                });
+
+                // Confluence page creation
+                document.getElementById('createConfluenceBtn').addEventListener('click', async function() {
+                    const btn = this;
+                    const originalContent = btn.innerHTML;
+                    btn.innerHTML = `
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span class="ms-1">Creating page...</span>
+                    `;
+                    btn.disabled = true;
+
+                    try {
+                        const htmlContent = document.querySelector('.offcanvas-body').innerHTML;
+                        const response = await fetch('/Home/CreateDraftPage', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ HtmlContent: htmlContent })
                         });
 
-        const connection = new signalR.HubConnectionBuilder()
+                        const url = await response.text();
+                        if (url) {
+                            // Open the Confluence page in a new tab
+                            window.open(url, '_blank');
+                        } else {
+                            throw new Error('Failed to create Confluence page');
+                        }
+                    } catch (error) {
+                        console.error('Error creating Confluence page:', error);
+                        alert('Failed to create Confluence page. Please try again.');
+                    } finally {
+                        btn.innerHTML = originalContent;
+                        btn.disabled = false;
+                    }
+                });
+            });
+
+            const connection = new signalR.HubConnectionBuilder()
                 .withUrl("/progressHub")
                 .build();
 
             connection.on("ReportProgress", (message, percent) => {
-              document.getElementById("progressWrapper").style.display = "block";
+                document.getElementById("progressWrapper").style.display = "block";
 
-                    const msgEl = document.getElementById("progressMessage");
-        msgEl.textContent = message;
-              const bar = document.getElementById("progressBar");
-              bar.style.width = percent + "%";
-              bar.textContent = percent + "%";
-              if (percent >= 100) {
-                setTimeout(() => document.getElementById("progressWrapper").style.display = "none", 500);
-                msgEl.textContent = "";
-              }
+                const msgEl = document.getElementById("progressMessage");
+                msgEl.textContent = message;
+                const bar = document.getElementById("progressBar");
+                bar.style.width = percent + "%";
+                bar.textContent = percent + "%";
+                if (percent >= 100) {
+                    setTimeout(() => document.getElementById("progressWrapper").style.display = "none", 500);
+                    msgEl.textContent = "";
+                }
             });
 
             connection.start().catch(console.error);
-    </script>
+        </script>
     }
 }

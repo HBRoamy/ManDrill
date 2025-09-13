@@ -1,17 +1,13 @@
-using System.Diagnostics;
-using System.Text.Json;
+using ManDrill.Client.Helpers;
 using ManDrill.Client.Models;
 using ManDrill.Client.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.MSBuild;
-using Microsoft.CodeAnalysis;
-using ManDrill.Client.Helpers;
-using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.SignalR;
-using System.Collections.Concurrent;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.Extensions.Caching.Memory;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 
 namespace ManDrill.Client.Controllers
 {
@@ -130,6 +126,20 @@ namespace ManDrill.Client.Controllers
 
             await _hub.Clients.All.SendAsync("ReportProgress", "Loaded solution.", 100);
             return loadedSolution;
+        }
+
+        [HttpPost]
+        public async Task<string> CreateDraftPage([FromBody] HtmlRequestModel model)
+        {
+            try
+            {
+                var url = await (new AIService()).CreateDraftPage(model.HtmlContent);
+                return url;
+            }
+            catch(Exception)
+            {
+                return null;
+            }
         }
     }
 }
