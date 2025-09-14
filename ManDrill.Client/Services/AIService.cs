@@ -22,15 +22,15 @@ namespace ManDrill.Client.Services
         /// <summary>
         /// Atlassian Domain name
         /// </summary>
-        private readonly string _domain = "test.atlassian.net";
+        private readonly string _domain = Environment.GetEnvironmentVariable("Atlassian_Domain") ?? string.Empty;
         /// <summary>
         /// Email address of registered atlassian account
         /// </summary>
-        private readonly string _email = "your.email@gmail.com"; 
+        private readonly string _email = Environment.GetEnvironmentVariable("Par_Email") ?? string.Empty; 
         /// <summary>
         /// API Token of atlassian account
         /// </summary>
-        private readonly string _apiToken = "";
+        private readonly string _apiToken = Environment.GetEnvironmentVariable("Atlassian_Api_Token") ?? string.Empty;
         /// <summary>
         /// The Claude model ID to use for generating summaries
         /// </summary>
@@ -128,11 +128,15 @@ namespace ManDrill.Client.Services
                 "BusinessContext": "4-6 non-technical sentences about what this method achieves in business terms, why it matters, and when it is used",
                 "TechnicalContext": "4-6 sentences describing the method's purpose, logic, and role in the overall system. Mention dependencies, data flow, or critical considerations",
                 "KeyOperations": ["6-7 items each max 8 words highlighting main operations or transformations done by this method"],
-                "FlowDiagram": "Create a clean, professional HTML flowchart from JSON with color-coded nodes (input, process, output, decision), clear labels, and directional arrows touching nodes. Centered, responsive, no emojis. And make sure the svg should have enough height to display whole flow diagram and text should be fit within the rectangle and also should not override on eachother.",
+                "FlowDiagram": "Create a clean, dark-themed, professional HTML flowchart from JSON with color-coded nodes (input, process, output, decision), clear labels, and directional arrows touching nodes. Centered, responsive, no emojis. And make sure the svg should have enough height to display whole flow diagram and text should be fit within the rectangle and also should not override on eachother.",
                 "Parameters": {"paramName": "explanation", "anotherParam": "explanation"},
                 "Dependencies": ["list of internal/external libraries, services or methods this depends on"],
                 "PerformanceNotes": "Highlight any performance-sensitive logic, caching, or scalability concerns",
-                "Conclusion": "Meaningful conclusion in 3-4 sentences"
+                "Conclusion": "Meaningful conclusion in 3-4 sentences",
+                "TimeSaved": {
+                    "estimateMinutes": "Estimate, in minutes, how much time a developer or architect would save by reading your generated report instead of manually analyzing the code. Base your answer on the provided method and its complexity.",
+                    "explanation": "Briefly, explain how you arrived at this estimate."
+                }
             }
             """;
 
@@ -272,7 +276,10 @@ namespace ManDrill.Client.Services
                                .Replace("[TechnicalContext]", model.TechnicalContext ?? "")
                                .Replace("[FlowDiagram]", model.FlowDiagram ?? "")
                                .Replace("[PerformanceNotes]", model.PerformanceNotes ?? "")
-                               .Replace("[Conclusion]", model.Conclusion ?? "");
+                               .Replace("[Conclusion]", model.Conclusion ?? "")
+                               .Replace("[EstimatedMinutes]", model.TimeSaved["estimateMinutes"])
+                               .Replace("[Explanation]", model.TimeSaved["explanation"]);
+
             // Build KeyOperations
             var keyOps = new StringBuilder();
             foreach (var op in model.KeyOperations)

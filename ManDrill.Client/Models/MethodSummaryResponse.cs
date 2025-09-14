@@ -11,5 +11,6 @@
         public List<string> Dependencies { get; set; }
         public string PerformanceNotes { get; set; }
         public string Conclusion { get; set; }
+        public Dictionary<string, string> TimeSaved { get; set; }
     }
 }
