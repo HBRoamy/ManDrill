@@ -46,7 +46,7 @@ namespace ManDrill.Client.Controllers
                 currentLoadedSoln = await LoadSolution(solutionPath);
             }
 
-            await _hub.Clients.All.SendAsync("ReportProgress", "Analyzing projects…", 40);
+            await _hub.Clients.All.SendAsync("ReportProgress", "Analyzing projects…", 20);
 
             var overloads = new List<IMethodSymbol>();
             int total = currentLoadedSoln.Projects.Count();
@@ -74,7 +74,7 @@ namespace ManDrill.Client.Controllers
                 }
 
                 done++;
-                var percent = 40 + (int)(60.0 * done / total);
+                var percent = 20 + (int)(60.0 * done / total);
                 await _hub.Clients.All.SendAsync("ReportProgress", $"Processed {done}/{total} projects", percent);
             }
 
@@ -88,7 +88,9 @@ namespace ManDrill.Client.Controllers
             var rootInfo = await extractor.ExtractAsync(methodSymbol);
 
             string json = JsonSerializer.Serialize(rootInfo, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+            await _hub.Clients.All.SendAsync("ReportProgress", "Generating method summary using AI...", 90);
             var methodSummary = includeAISummary ? await (new AIService()).GenerateMethodSummary(methodSymbol, json) : null;
+            await _hub.Clients.All.SendAsync("ReportProgress", "Embedded AI Response.", 100);
             return View(new AnalyzerViewModel
             {
                 SolutionPath = solutionPath,

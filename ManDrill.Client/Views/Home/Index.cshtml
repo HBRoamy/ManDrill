@@ -287,6 +287,16 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
+            mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+            });
                 const editor = new Drawflow(document.getElementById('drawflow'));
                 editor.reroute = true;
                 editor.reroute_fix_curvature = true;
@@ -305,6 +315,7 @@
                     // Collapse the form
                     const collapseEl = document.getElementById('analyzerFormCollapse');
                     bootstrap.Collapse.getOrCreateInstance(collapseEl).hide();
+                    mermaid.run();
                 }, 100);
 
                 // PDF Download functionality

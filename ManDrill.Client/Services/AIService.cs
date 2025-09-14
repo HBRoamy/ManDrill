@@ -128,7 +128,18 @@ namespace ManDrill.Client.Services
                 "BusinessContext": "4-6 non-technical sentences about what this method achieves in business terms, why it matters, and when it is used",
                 "TechnicalContext": "4-6 sentences describing the method's purpose, logic, and role in the overall system. Mention dependencies, data flow, or critical considerations",
                 "KeyOperations": ["6-7 items each max 8 words highlighting main operations or transformations done by this method"],
-                "FlowDiagram": "Create a clean, dark-themed, professional HTML flowchart from JSON with color-coded nodes (input, process, output, decision), clear labels, and directional arrows touching nodes. Centered, responsive, no emojis. And make sure the svg should have enough height to display whole flow diagram and text should be fit within the rectangle and also should not override on eachother.",
+                "FlowDiagram": "Convert the JSON method call data into a VALID Mermaid.js flowchart.
+            STRICT RULES:
+            - Use simple node labels (no spaces, dashes, or special characters in IDs)
+            - Keep it simple - no subgraphs, no complex labels
+            - Use single letters for node IDs (A, B, C...)
+            - Node labels must use only letters, numbers, and spaces - NO periods, parentheses, colons, or special characters
+            - Test each connection as you write it
+            - Exactly ONE diagram declaration: flowchart TD
+            - You MAY use inline CSS class markers appended to node lines (e.g. `:::processNode`, `:::decisionNode`, `:::dataNode`) — but DO NOT define them
+            - Use |labels| for decision branches
+            - Only use --> arrows (no dotted arrows)
+            - Output MUST contain ONLY the flowchart definition, nothing else",
                 "Parameters": {"paramName": "explanation", "anotherParam": "explanation"},
                 "Dependencies": ["list of internal/external libraries, services or methods this depends on"],
                 "PerformanceNotes": "Highlight any performance-sensitive logic, caching, or scalability concerns",
@@ -171,7 +182,7 @@ namespace ManDrill.Client.Services
             var requestBody = new
             {
                 anthropic_version = "bedrock-2023-05-31",
-                max_tokens = 10000,
+                max_tokens = 20000,
                 temperature = 0.1,
                 messages = new[]
                 {
@@ -207,7 +218,8 @@ namespace ManDrill.Client.Services
             {
                 // Parse the AI response into our model
                 var summaryResponse = JsonSerializer.Deserialize<MethodSummaryResponse>(aiResponse);
-                
+                Console.WriteLine();
+                Console.WriteLine(summaryResponse.FlowDiagram);
                 return GenerateHtmlFromFile(summaryResponse, "wwwroot/pdf-template.html");
             }
             catch (JsonException ex)

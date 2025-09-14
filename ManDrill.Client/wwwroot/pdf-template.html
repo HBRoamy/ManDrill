@@ -49,8 +49,189 @@
     body {
         font-family: 'Montserrat', sans-serif;
     }
+
+    .mermaid {
+        background: transparent !important;
+        border-radius: 20px !important;
+        font-family: montserrat,-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+    }
+
+        /* Custom node & edge styles via Mermaid SVG node class targeting */
+        .mermaid .node rect, .mermaid .node polygon, .mermaid .node ellipse {
+            rx: 12px !important; /* Softer border radius */
+        }
+
+        /* START/INPUT: clean blue */
+        .mermaid .startNode rect, .mermaid .inputNode rect {
+            fill: #3b82f6 !important;
+            stroke: #2563eb !important;
+            stroke-width: 2px !important;
+            filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.3));
+        }
+
+        /* PROCESS: clean green */
+        .mermaid .processNode rect {
+            fill: #10b981 !important;
+            stroke: #059669 !important;
+            stroke-width: 2px !important;
+            filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.3));
+        }
+
+        /* ACTION: clean teal */
+        .mermaid .actionNode rect {
+            fill: #14b8a6 !important;
+            stroke: #0d9488 !important;
+            stroke-width: 2px !important;
+            filter: drop-shadow(0 2px 8px rgba(20, 184, 166, 0.3));
+        }
+
+        /* DECISION: clean orange */
+        .mermaid .decisionNode polygon {
+            fill: #f59e0b !important;
+            stroke: #d97706 !important;
+            stroke-width: 2px !important;
+            filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.3));
+        }
+
+        /* DATA: clean purple */
+        .mermaid .dataNode rect {
+            fill: #8b5cf6 !important;
+            stroke: #7c3aed !important;
+            stroke-width: 2px !important;
+            filter: drop-shadow(0 2px 8px rgba(139, 92, 246, 0.3));
+        }
+
+        /* END/OUTPUT: clean pink */
+        .mermaid .outputNode rect, .mermaid .endNode rect {
+            fill: #ec4899 !important;
+            stroke: #db2777 !important;
+            stroke-width: 2px !important;
+            filter: drop-shadow(0 2px 8px rgba(236, 72, 153, 0.3));
+        }
+
+        /* API/SERVICE: clean cyan */
+        .mermaid .apiNode rect, .mermaid .serviceNode rect {
+            fill: #06b6d4 !important;
+            stroke: #0891b2 !important;
+            stroke-width: 2px !important;
+            filter: drop-shadow(0 2px 8px rgba(6, 182, 212, 0.3));
+        }
+
+        /* ERROR: clean red */
+        .mermaid .errorNode rect, .mermaid .warningNode rect {
+            fill: #ef4444 !important;
+            stroke: #dc2626 !important;
+            stroke-width: 2px !important;
+            filter: drop-shadow(0 2px 8px rgba(239, 68, 68, 0.3));
+        }
+
+        /* Node text - clean white */
+        .mermaid .node text {
+            fill: #ffffff !important;
+            font-family: inherit !important;
+            font-weight: 500 !important;
+            font-size: 13px !important;
+            text-shadow: none !important;
+        }
+
+        .mermaid .node.decisionNode text {
+            font-size: 12px !important;
+        }
+
+        /* Arrows - consistent white throughout */
+        .mermaid .edgePath path {
+            stroke: #ffffff !important;
+            stroke-width: 2px !important;
+        }
+
+        .mermaid .arrowheadPath {
+            fill: #ffffff !important; /* Fixed: was grey, now white */
+            stroke: #ffffff !important;
+        }
+
+        /* Edge labels - clean white text on subtle background */
+        .mermaid .edgeLabel {
+            background-color: rgba(30, 41, 59, 0.9) !important;
+            border-radius: 6px !important;
+            padding: 3px 8px !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+            .mermaid .edgeLabel text {
+                fill: #ffffff !important; /* Fixed: was using dark color, now white */
+                font-size: 11px !important;
+                font-weight: 500 !important;
+            }
+
+        /* Subgraph styling - minimal and clean */
+        .mermaid .cluster rect {
+            fill: rgba(30, 41, 59, 0.4) !important;
+            stroke: rgba(255, 255, 255, 0.2) !important;
+            stroke-dasharray: 3 3 !important;
+            rx: 8px !important;
+            stroke-width: 1px !important;
+        }
+
+        .mermaid .cluster text {
+            fill: #e2e8f0 !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+        }
+
+    /* Ensure flowchart links are white */
+    .flowchart-link {
+        stroke: #ffffff !important;
+    }
+
+    /* Modern legend styling */
+    .legend {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px;
+        margin-top: 24px;
+        background: rgba(15, 23, 42, 0.8) !important;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 16px 18px;
+        backdrop-filter: blur(8px);
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 2px 0;
+    }
+
+    .legend-color {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .legend-text {
+        font-size: 13px;
+        color: #f8fafc;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+    }
+
+    /* Nuclear override - add this at the very end */
+    .mermaid text,
+    .mermaid tspan,
+    .mermaid .edgeLabel,
+    .mermaid foreignObject * {
+        fill: white !important;
+        color: white !important;
+    }
+
+    .mermaid marker polygon,
+    .mermaid marker path {
+        fill: white !important;
+    }
 </style>
-<h1>📄 [Title]</h1>
+<h1 class="h1">📄 [Title]</h1>
 
 <h2>💼 Business Context</h2>
 <p>[BusinessContext]</p>
@@ -67,7 +248,56 @@
 <hr>
 
 <h2>📊 Flow Diagram</h2>
-<p>[FlowDiagram]</p>
+<div>
+    <div class="mermaid">
+        [FlowDiagram]
+    </div>
+    <svg height="0" width="0">
+        <defs>
+            <linearGradient id="node-blue" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1e3a8a" />
+                <stop offset="100%" stop-color="#3b82f6" />
+            </linearGradient>
+            <linearGradient id="node-green" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#059669" />
+                <stop offset="100%" stop-color="#10b981" />
+            </linearGradient>
+            <linearGradient id="node-teal" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#0e7490" />
+                <stop offset="100%" stop-color="#14b8a6" />
+            </linearGradient>
+            <linearGradient id="node-yellow" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#92400e" />
+                <stop offset="100%" stop-color="#f59e0b" />
+            </linearGradient>
+            <linearGradient id="node-purple" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#581c87" />
+                <stop offset="100%" stop-color="#8b5cf6" />
+            </linearGradient>
+            <linearGradient id="node-error" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#991b1b" />
+                <stop offset="100%" stop-color="#ef4444" />
+            </linearGradient>
+            <linearGradient id="node-pink" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#be185d" />
+                <stop offset="100%" stop-color="#ec4899" />
+            </linearGradient>
+            <linearGradient id="node-cyan" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#0f766e" />
+                <stop offset="100%" stop-color="#2dd4bf" />
+            </linearGradient>
+        </defs>
+    </svg>
+    <div class="legend">
+        <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6);"></div><span class="legend-text">Start/Input Node</span></div>
+        <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #059669, #10b981);"></div><span class="legend-text">Process Node</span></div>
+        <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #0e7490, #14b8a6);"></div><span class="legend-text">Action/Service Node</span></div>
+        <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #92400e, #f59e0b);"></div><span class="legend-text">Decision Node</span></div>
+        <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #581c87, #8b5cf6);"></div><span class="legend-text">Data Node</span></div>
+        <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #be185d, #ec4899);"></div><span class="legend-text">Output/End Node</span></div>
+        <div class="legend-item"><div class="legend-color" style="background: linear-gradient(135deg, #991b1b, #ef4444);"></div><span class="legend-text">Error Node</span></div>
+    </div>
+</div>
 <hr>
 
 <h2>⚙️ Parameters</h2>
