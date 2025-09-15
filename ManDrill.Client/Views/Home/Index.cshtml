@@ -294,6 +294,12 @@
         <div class="offcanvas-header border-bottom border-secondary d-flex justify-content-between align-items-center">
             <h4 class="offcanvas-title heading-glow" id="offcanvasWithBothOptionsLabel">AI Summary</h4>
             <div class="d-flex gap-2 align-items-center">
+                <button type="button" class="btn btn-warning btn-sm ms-2" id="downloadMermaidSVG" title="Download Flow Diagram SVG">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-diagram-3" viewBox="0 0 16 16">
+                        <path d="M2 0a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm0 1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zm10-1a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2zm0 1h-2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 10a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm0 1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1zm10-1a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2zm0 1h-2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1z" />
+                    </svg>
+                    <span class="ms-1">Download Flow Diagram SVG</span>
+                </button>
                 <button type="button" class="btn btn-success btn-sm" id="downloadPdfBtn" title="Download as PDF">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-pdf" viewBox="0 0 16 16">
                         <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
@@ -445,6 +451,17 @@
                         btn.disabled = false;
                     }
                 });
+            });
+
+            document.getElementById('downloadMermaidSVG').addEventListener('click', async function() {
+                const svg = document.querySelector('.right-panel .mermaid svg');
+                if (svg) {
+                  const blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: 'image/svg+xml' });
+                  const a = document.createElement('a');
+                  a.href = URL.createObjectURL(blob);
+                  a.download = 'flow-diagram.svg';
+                  a.click();
+                }
             });
 
             document.querySelectorAll('g.edgeLabel').forEach(el => {
