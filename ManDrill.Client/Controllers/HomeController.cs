@@ -1,17 +1,13 @@
-using System.Diagnostics;
-using System.Text.Json;
+using ManDrill.Client.Helpers;
 using ManDrill.Client.Models;
 using ManDrill.Client.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.MSBuild;
-using Microsoft.CodeAnalysis;
-using ManDrill.Client.Helpers;
-using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.SignalR;
-using System.Collections.Concurrent;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.Extensions.Caching.Memory;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 
 namespace ManDrill.Client.Controllers
 {
@@ -38,7 +34,7 @@ namespace ManDrill.Client.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(string solutionPath, string namespaceName, string className, string methodNameInput, bool includeAISummary = false)
+        public async Task<IActionResult> Index(string solutionPath, string namespaceName, string className, string methodNameInput, int overloadNumber = 1, bool includeAISummary = false)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(solutionPath);
             ArgumentException.ThrowIfNullOrWhiteSpace(className);
@@ -50,7 +46,7 @@ namespace ManDrill.Client.Controllers
                 currentLoadedSoln = await LoadSolution(solutionPath);
             }
 
-            await _hub.Clients.All.SendAsync("ReportProgress", "Analyzing projects…", 40);
+            await _hub.Clients.All.SendAsync("ReportProgress", "Analyzing projects…", 20);
 
             var overloads = new List<IMethodSymbol>();
             int total = currentLoadedSoln.Projects.Count();
@@ -67,7 +63,7 @@ namespace ManDrill.Client.Controllers
                         foreach (var type in ns.GetTypeMembersRecursive())
                         {
                             var simpleTypeName = type.Name.Split('`')[0];
-                            if (simpleTypeName == className)
+                            if (simpleTypeName == className)//handles the partial classes as well
                             {
                                 overloads.AddRange(type.GetMembers()
                                     .OfType<IMethodSymbol>()
@@ -78,7 +74,7 @@ namespace ManDrill.Client.Controllers
                 }
 
                 done++;
-                var percent = 40 + (int)(60.0 * done / total);
+                var percent = 20 + (int)(60.0 * done / total);
                 await _hub.Clients.All.SendAsync("ReportProgress", $"Processed {done}/{total} projects", percent);
             }
 
@@ -87,12 +83,14 @@ namespace ManDrill.Client.Controllers
                 throw new Exception("Method not found");
             }
 
-            var methodSymbol = overloads[0];
+            var methodSymbol = overloads[overloadNumber-1];
             var extractor = new MethodCallExtractor(currentLoadedSoln);
             var rootInfo = await extractor.ExtractAsync(methodSymbol);
 
             string json = JsonSerializer.Serialize(rootInfo, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
-            var methodSummary = includeAISummary ? await (new AIService()).GenerateMethodSummary(methodSymbol) : null;
+            await _hub.Clients.All.SendAsync("ReportProgress", "Generating method summary using AI...", 90);
+            var methodSummary = includeAISummary ? await (new AIService()).GenerateMethodSummary(methodSymbol, json) : null;
+            await _hub.Clients.All.SendAsync("ReportProgress", "Embedded AI Response.", 100);
             return View(new AnalyzerViewModel
             {
                 SolutionPath = solutionPath,
@@ -106,7 +104,9 @@ namespace ManDrill.Client.Controllers
                     Signature = $"{m.ReturnType} {m.Name}({string.Join(", ", m.Parameters.Select(p => $"{p.Type} {p.Name}"))})"
                 }).ToList() ?? [],
                 SelectedOverload = 1,
-                JsonOutput = DrawCallMapper.ConvertMethodCallJsonToDrawflow(json, methodSummary, solutionPath) ?? "{}"
+                AISummary = methodSummary,
+                JsonOutput = DrawCallMapper.ConvertMethodCallJsonToDrawflow(json, solutionPath) ?? "{}",
+                IncludeAISummary = includeAISummary
             });
         }
 
@@ -129,6 +129,20 @@ namespace ManDrill.Client.Controllers
 
             await _hub.Clients.All.SendAsync("ReportProgress", "Loaded solution.", 100);
             return loadedSolution;
+        }
+
+        [HttpPost]
+        public async Task<string> CreateDraftPage([FromBody] HtmlRequestModel model)
+        {
+            try
+            {
+                var url = await (new AIService()).CreateDraftPage(model.HtmlContent);
+                return url;
+            }
+            catch(Exception)
+            {
+                return null;
+            }
         }
     }
 }

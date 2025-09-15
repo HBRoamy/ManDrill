@@ -1,8 +1,10 @@
-﻿using System.Text.RegularExpressions;
-using System.Text.Json;
-using Microsoft.CodeAnalysis;
-using Amazon.BedrockRuntime;
+﻿using Amazon.BedrockRuntime;
 using Amazon.BedrockRuntime.Model;
+using ManDrill.Client.Models;
+using Microsoft.CodeAnalysis;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 
 namespace ManDrill.Client.Services
 {
@@ -17,7 +19,18 @@ namespace ManDrill.Client.Services
         /// The Amazon Bedrock runtime client for making API calls to Claude
         /// </summary>
         private readonly AmazonBedrockRuntimeClient _bedrockClient;
-
+        /// <summary>
+        /// Atlassian Domain name
+        /// </summary>
+        private readonly string _domain = Environment.GetEnvironmentVariable("Atlassian_Domain") ?? string.Empty;
+        /// <summary>
+        /// Email address of registered atlassian account
+        /// </summary>
+        private readonly string _email = Environment.GetEnvironmentVariable("Par_Email") ?? string.Empty; 
+        /// <summary>
+        /// API Token of atlassian account
+        /// </summary>
+        private readonly string _apiToken = Environment.GetEnvironmentVariable("Atlassian_Api_Token") ?? string.Empty;
         /// <summary>
         /// The Claude model ID to use for generating summaries
         /// </summary>
@@ -55,7 +68,7 @@ namespace ManDrill.Client.Services
         /// or "Method summary unavailable" if generation fails
         /// </returns>
         /// <exception cref="ArgumentNullException">Thrown when methodSymbol is null</exception>
-        public async Task<string?> GenerateMethodSummary(IMethodSymbol methodSymbol)
+        public async Task<string?> GenerateMethodSummary(IMethodSymbol methodSymbol, string json)
         {
             if (methodSymbol == null)
                 throw new ArgumentNullException(nameof(methodSymbol));
@@ -67,11 +80,8 @@ namespace ManDrill.Client.Services
                 if (string.IsNullOrEmpty(methodBody))
                     return "Method implementation not available";
 
-                // Obfuscate any sensitive data in the method body
-                var obfuscatedBody = ObfuscateOrgData(methodBody);
-
                 // Create the prompt for Claude
-                var prompt = CreateAnalysisPrompt(methodSymbol, obfuscatedBody);
+                var prompt = CreateAnalysisPrompt(methodSymbol, methodBody, json);
 
                 // Generate the summary using Claude
                 var summary = await GenerateSummaryWithClaude(prompt);
@@ -108,43 +118,56 @@ namespace ManDrill.Client.Services
         /// Creates the analysis prompt for Claude
         /// </summary>
         /// <param name="methodSymbol">The method symbol being analyzed</param>
-        /// <param name="obfuscatedBody">The obfuscated method implementation</param>
+        /// <param name="methodBody">The obfuscated method implementation</param>
         /// <returns>The formatted prompt string</returns>
-        private string CreateAnalysisPrompt(IMethodSymbol methodSymbol, string obfuscatedBody)
+        private string CreateAnalysisPrompt(IMethodSymbol methodSymbol, string methodBody, string methodCallJson)
         {
+            var jsonTemplate = """
+            {
+                "Title": "2-3 word summary",
+                "BusinessContext": "4-6 non-technical sentences about what this method achieves in business terms, why it matters, and when it is used",
+                "TechnicalContext": "4-6 sentences describing the method's purpose, logic, and role in the overall system. Mention dependencies, data flow, or critical considerations",
+                "KeyOperations": ["6-7 items each max 8 words highlighting main operations or transformations done by this method"],
+                "FlowDiagram": "Convert the JSON method call data into a VALID Mermaid.js flowchart.
+                    STRICT RULES:
+                    - Use simple node labels (no spaces, dashes, or special characters in IDs)
+                    - Keep it simple - no subgraphs, no complex labels
+                    - Use single letters for node IDs (A, B, C...)
+                    - Node labels must use only letters, numbers, and spaces - NO periods, parentheses, colons, or special characters
+                    - Test each connection as you write it
+                    - Exactly ONE diagram declaration: flowchart TD
+                    - You MAY use inline CSS class markers appended to node lines (e.g. `:::processNode`, `:::decisionNode`, `:::dataNode`) — but DO NOT define them
+                    - Use |labels| for decision branches
+                    - Only use --> arrows (no dotted arrows)
+                    - Output MUST contain ONLY the flowchart definition, nothing else",
+                "Parameters": {"paramName": "explanation", "anotherParam": "explanation"},
+                "Dependencies": ["list of internal/external libraries, services or methods this depends on"],
+                "PerformanceNotes": "Highlight any performance-sensitive logic, caching, or scalability concerns",
+                "Conclusion": "Meaningful conclusion in 3-4 sentences",
+                "TimeSaved": {
+                    "estimateMinutes": "Estimate, in minutes, how much time a developer or architect would save by reading your generated report instead of manually analyzing the code. Base your answer on the provided method and its complexity."
+                }
+            }
+            """;
+
             return $"""
-You are analyzing a C# method for a code visualization tool. Create a HTML summary that will be displayed inside a data flow graph node.
+                You are analyzing a C# method for a code visualization tool. Create a detailed analysis in JSON format.DO NOT wrap in markdown code blocks. DO NOT use ``` markers. DO NOT add any explanatory text.
 
-CRITICAL: Your response must be ONLY the HTML content. DO NOT wrap in markdown code blocks. DO NOT use ``` markers. DO NOT add any explanatory text.
+                CRITICAL: Your response must be ONLY valid JSON. Do not include any explanatory text or markdown.
 
-REQUIREMENTS:
-- Around 150-200 words total
-- Use Bootstrap 5 dark theme classes (bg-dark, text-light, text-info, text-warning)
-- Structure as a compact card layout
-- Must fit in a 300px wide node
-- Start immediately with <div class="bg-dark...
+                The response should follow this exact JSON structure:
+                {jsonTemplate}
 
-METHOD TO ANALYZE:
-Signature: {methodSymbol}
-Implementation:
-{obfuscatedBody}
+                METHOD TO ANALYZE:
+                Signature: {methodSymbol}
+                Implementation:
+                {methodBody}
 
-YOUR RESPONSE MUST START WITH: <div class="bg-dark text-light p-2 rounded">
+                Flow Data:
+                {methodCallJson}
 
-TEMPLATE TO FOLLOW EXACTLY:
-<div class="bg-dark text-light p-2 rounded">
-    <div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Purpose</div>
-    <div class="mb-2" style="font-size: 0.8rem;">[1-2 sentences about what this method does]</div>
-    
-    <div class="text-warning fw-bold mb-1" style="font-size: 0.85rem;">Key Operations</div>
-    <div class="mb-2" style="font-size: 0.8rem;">[2-3 bullet points with • symbol, each max 8 words]</div>
-    
-    <div class="text-info fw-bold mb-1" style="font-size: 0.85rem;">Parameters</div>
-    <div style="font-size: 0.8rem;">[List important parameters only, max 3]</div>
-</div>
-
-REMEMBER: No markdown, no code blocks, no explanations. Just the HTML starting with <div class="bg-dark...
-""";
+                REMEMBER: Return ONLY the JSON object, no additional text or formatting.
+                """;
         }
 
         /// <summary>
@@ -158,7 +181,7 @@ REMEMBER: No markdown, no code blocks, no explanations. Just the HTML starting w
             var requestBody = new
             {
                 anthropic_version = "bedrock-2023-05-31",
-                max_tokens = 1000,
+                max_tokens = 30000,
                 temperature = 0.1,
                 messages = new[]
                 {
@@ -185,36 +208,111 @@ REMEMBER: No markdown, no code blocks, no explanations. Just the HTML starting w
             var responseJson = await reader.ReadToEndAsync();
             
             var responseData = JsonSerializer.Deserialize<JsonElement>(responseJson);
-            return responseData.GetProperty("content")[0].GetProperty("text").GetString() ?? "Summary generation failed";
+            var aiResponse = responseData.GetProperty("content")[0].GetProperty("text").GetString();
+
+            if (string.IsNullOrEmpty(aiResponse))
+                return "Summary generation failed";
+
+            try
+            {
+                // Parse the AI response into our model
+                var summaryResponse = JsonSerializer.Deserialize<MethodSummaryResponse>(aiResponse);
+                Console.WriteLine();
+                Console.WriteLine(summaryResponse.FlowDiagram);
+                return GenerateHtmlFromFile(summaryResponse, "wwwroot/pdf-template.html");
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Error parsing AI response: {ex.Message}");
+                return "Error parsing AI response";
+            }
         }
 
-        /// <summary>
-        /// Obfuscates organization-specific data in method implementations to protect sensitive information
-        /// </summary>
-        /// <param name="input">The input string to obfuscate</param>
-        /// <returns>The obfuscated string with sensitive data replaced with generic placeholders</returns>
-        private static string ObfuscateOrgData(string input)
+        public async Task<string> CreateDraftPage(string htmlContent)
         {
-            if (string.IsNullOrEmpty(input))
-                return input;
+            string confluenceUrl = $"https://{_domain}/wiki/rest/api/content";
+            using var client = new HttpClient();
+            // Basic Auth
+            var authToken = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_email}:{_apiToken}"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            // Payload
+            var payload = new
+            {
+                type = "page",
+                title = "ManDrill Testing",
+                space = new { key = "Mavericks" },
+                status = "draft",
+                ancestors = new[]
+                {
+                    new { id = 6844416004 } // Set parent page ID here
+                },
+                body = new
+                {
+                    storage = new
+                    {
+                        value = htmlContent,
+                        representation = "storage"
+                    }
+                }
+            };
+            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            string jsonPayload = JsonSerializer.Serialize(payload, options);
+            var response = await client.PostAsync(confluenceUrl, new StringContent(jsonPayload, Encoding.UTF8, "application/json"));
+            if (!response.IsSuccessStatusCode)
+            {
+                string error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Failed to create draft page: {error}");
+            }
 
-            // Replace common organization-related keywords with generic placeholders
-            var orgKeywords = new[] { "corp", "company", "org", "enterprise", "business", "firm", "AdminPortal", "Par", "Partech", "Parcorp", "UpgradePortal" };
-            var pattern = string.Join("|", orgKeywords);
-            var regex = new Regex($@"\b({pattern})\b", RegexOptions.IgnoreCase);
+            // Parse the response to get the page URL
+            string responseContent = await response.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(responseContent);
+            string relativeLink = doc.RootElement.GetProperty("_links").GetProperty("webui").GetString();
+            string fullPageUrl = $"https://{_domain}/wiki{relativeLink}";
 
-            // Obfuscate namespace declarations and usages
-            var namespaceRegex = new Regex(@"namespace\s+([A-Za-z0-9_.]+)", RegexOptions.IgnoreCase);
-            input = namespaceRegex.Replace(input, "namespace [REDACTED_NAMESPACE]");
+            Console.WriteLine("Draft Confluence page created at: " + fullPageUrl);
 
-            // Obfuscate namespace-like structures that might contain org names
-            input = regex.Replace(input, match => "[REDACTED]")
-                         .Replace("Company.", "Namespace.")
-                         .Replace("Corp.", "Namespace.");
+            return fullPageUrl;
 
-            return input;
         }
 
+        public static string GenerateHtmlFromFile(MethodSummaryResponse model, string templatePath)
+        {
+            // Read template from file
+            string template = File.ReadAllText(templatePath);
+            // Replace simple placeholders
+            template = template.Replace("[Title]", model.Title ?? "")
+                               .Replace("[BusinessContext]", model.BusinessContext ?? "")
+                               .Replace("[TechnicalContext]", model.TechnicalContext ?? "")
+                               .Replace("[FlowDiagram]", model.FlowDiagram ?? "")
+                               .Replace("[PerformanceNotes]", model.PerformanceNotes ?? "")
+                               .Replace("[Conclusion]", model.Conclusion ?? "")
+                               .Replace("[EstimatedMinutes]", model.TimeSaved["estimateMinutes"]);
+
+            // Build KeyOperations
+            var keyOps = new StringBuilder();
+            foreach (var op in model.KeyOperations)
+            {
+                keyOps.AppendLine($"<li>{op}</li>");
+            }
+            template = template.Replace("[KeyOperations]", keyOps.ToString());
+            // Build Parameters table rows
+            var paramRows = new StringBuilder();
+            foreach (var param in model.Parameters)
+            {
+                paramRows.AppendLine($"<tr><td>{param.Key}</td><td>{param.Value}</td></tr>");
+            }
+            template = template.Replace("[Parameters]", paramRows.ToString());
+            // Build Dependencies
+            var deps = new StringBuilder();
+            foreach (var dep in model.Dependencies)
+            {
+                deps.AppendLine($"<li>{dep}</li>");
+            }
+            template = template.Replace("[Dependencies]", deps.ToString());
+            return template;
+        }
         #endregion
     }
 }
