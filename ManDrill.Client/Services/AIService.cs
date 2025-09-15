@@ -146,7 +146,7 @@ namespace ManDrill.Client.Services
                 "Conclusion": "Meaningful conclusion in 3-4 sentences",
                 "TimeSaved": {
                     "estimateMinutes": "Estimate, in minutes, how much time a developer or architect would save by reading your generated report instead of manually analyzing the code. Base your answer on the provided method and its complexity.",
-                    "explanation": "Briefly, explain how you arrived at this estimate."
+                    "manualTimeToUnderstand": "Estimated minutes for a developer to manually understand this method flow."
                 }
             }
             """;
@@ -182,7 +182,7 @@ namespace ManDrill.Client.Services
             var requestBody = new
             {
                 anthropic_version = "bedrock-2023-05-31",
-                max_tokens = 20000,
+                max_tokens = 30000,
                 temperature = 0.1,
                 messages = new[]
                 {
@@ -290,7 +290,7 @@ namespace ManDrill.Client.Services
                                .Replace("[PerformanceNotes]", model.PerformanceNotes ?? "")
                                .Replace("[Conclusion]", model.Conclusion ?? "")
                                .Replace("[EstimatedMinutes]", model.TimeSaved["estimateMinutes"])
-                               .Replace("[Explanation]", model.TimeSaved["explanation"]);
+                               .Replace("[ManualTimeToUnderstand]", model.TimeSaved["manualTimeToUnderstand"]);
 
             // Build KeyOperations
             var keyOps = new StringBuilder();
