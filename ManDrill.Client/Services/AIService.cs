@@ -129,24 +129,23 @@ namespace ManDrill.Client.Services
                 "TechnicalContext": "4-6 sentences describing the method's purpose, logic, and role in the overall system. Mention dependencies, data flow, or critical considerations",
                 "KeyOperations": ["6-7 items each max 8 words highlighting main operations or transformations done by this method"],
                 "FlowDiagram": "Convert the JSON method call data into a VALID Mermaid.js flowchart.
-            STRICT RULES:
-            - Use simple node labels (no spaces, dashes, or special characters in IDs)
-            - Keep it simple - no subgraphs, no complex labels
-            - Use single letters for node IDs (A, B, C...)
-            - Node labels must use only letters, numbers, and spaces - NO periods, parentheses, colons, or special characters
-            - Test each connection as you write it
-            - Exactly ONE diagram declaration: flowchart TD
-            - You MAY use inline CSS class markers appended to node lines (e.g. `:::processNode`, `:::decisionNode`, `:::dataNode`) — but DO NOT define them
-            - Use |labels| for decision branches
-            - Only use --> arrows (no dotted arrows)
-            - Output MUST contain ONLY the flowchart definition, nothing else",
+                    STRICT RULES:
+                    - Use simple node labels (no spaces, dashes, or special characters in IDs)
+                    - Keep it simple - no subgraphs, no complex labels
+                    - Use single letters for node IDs (A, B, C...)
+                    - Node labels must use only letters, numbers, and spaces - NO periods, parentheses, colons, or special characters
+                    - Test each connection as you write it
+                    - Exactly ONE diagram declaration: flowchart TD
+                    - You MAY use inline CSS class markers appended to node lines (e.g. `:::processNode`, `:::decisionNode`, `:::dataNode`) — but DO NOT define them
+                    - Use |labels| for decision branches
+                    - Only use --> arrows (no dotted arrows)
+                    - Output MUST contain ONLY the flowchart definition, nothing else",
                 "Parameters": {"paramName": "explanation", "anotherParam": "explanation"},
                 "Dependencies": ["list of internal/external libraries, services or methods this depends on"],
                 "PerformanceNotes": "Highlight any performance-sensitive logic, caching, or scalability concerns",
                 "Conclusion": "Meaningful conclusion in 3-4 sentences",
                 "TimeSaved": {
-                    "estimateMinutes": "Estimate, in minutes, how much time a developer or architect would save by reading your generated report instead of manually analyzing the code. Base your answer on the provided method and its complexity.",
-                    "manualTimeToUnderstand": "Estimated minutes for a developer to manually understand this method flow."
+                    "estimateMinutes": "Estimate, in minutes, how much time a developer or architect would save by reading your generated report instead of manually analyzing the code. Base your answer on the provided method and its complexity."
                 }
             }
             """;
@@ -289,8 +288,7 @@ namespace ManDrill.Client.Services
                                .Replace("[FlowDiagram]", model.FlowDiagram ?? "")
                                .Replace("[PerformanceNotes]", model.PerformanceNotes ?? "")
                                .Replace("[Conclusion]", model.Conclusion ?? "")
-                               .Replace("[EstimatedMinutes]", model.TimeSaved["estimateMinutes"])
-                               .Replace("[ManualTimeToUnderstand]", model.TimeSaved["manualTimeToUnderstand"]);
+                               .Replace("[EstimatedMinutes]", model.TimeSaved["estimateMinutes"]);
 
             // Build KeyOperations
             var keyOps = new StringBuilder();

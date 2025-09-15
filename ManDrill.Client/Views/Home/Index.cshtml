@@ -156,6 +156,13 @@
         font-family: sans-serif;
     }
 
+    .offcanvas-body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+    }
 </style>
 
 <div class="container mt-5">
@@ -250,11 +257,11 @@
         <div class="card shadow-lg" id="card-drawflow">
             <div class="card-header mdr-bg text-white d-flex justify-content-between align-items-center">
                 <h3 class="h5 mb-0">Visualization</h3>
-                <div>
+                <div class="d-flex align-items-center gap-1">
                     
                     @if (Model.IncludeAISummary)
                     {
-                        <button class="ai-summary-button mdr-bg" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+                        <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
                             <div class="ai-summary-content">
                                 <div class="ai-summary-logo-text">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
@@ -278,23 +285,23 @@
                 </div>
             </div>
             <div class="card-body p-2">
-                <div id="drawflow" style="width:100%; height:70vh; min-height:500px;"></div>
+                <div id="drawflow" style="width:100%; height:100%; min-height:500px;"></div>
             </div>
         </div>
     </div>
 
-    <div class="offcanvas offcanvas-end bg-dark text-light" style="--bs-offcanvas-width: 60%;" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+    <div class="offcanvas offcanvas-end bg-dark text-light" style="--bs-offcanvas-width: 100%;" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
         <div class="offcanvas-header border-bottom border-secondary d-flex justify-content-between align-items-center">
             <h4 class="offcanvas-title heading-glow" id="offcanvasWithBothOptionsLabel">AI Summary</h4>
             <div class="d-flex gap-2 align-items-center">
-                <button type="button" class="btn btn-outline-success btn-sm" id="downloadPdfBtn" title="Download as PDF">
+                <button type="button" class="btn btn-success btn-sm" id="downloadPdfBtn" title="Download as PDF">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-pdf" viewBox="0 0 16 16">
                         <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
                         <path d="M4.603 14.087a.81.81 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.68 7.68 0 0 1 1.482-.645 19.701 19.701 0 0 0 1.062-2.227 7.269 7.269 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a10.954 10.954 0 0 0 .98 1.686 5.753 5.753 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.856.856 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.716 5.716 0 0 1-.911-.95 11.642 11.642 0 0 0-1.997.406 11.311 11.311 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.793.793 0 0 1-.58.029zm1.379-1.901c-.166.076-.32.156-.459.238-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361.01.022.02.036.026.044a.27.27 0 0 0 .035-.012c.137-.056.355-.235.635-.572a8.18 8.18 0 0 0 .45-.606zm1.64-1.33a12.647 12.647 0 0 1 1.01-.193 11.666 11.666 0 0 1-.51-.858 20.741 20.741 0 0 1-.5 1.05zm2.446.45c.15.162.296.3.435.41.24.19.407.253.498.256a.107.107 0 0 0 .07-.015.307.307 0 0 0 .094-.125.436.436 0 0 0 .059-.2.095.095 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a3.881 3.881 0 0 0-.612-.053zM8.078 7.8a6.7 6.7 0 0 0 .2-.828c.031-.188.043-.343.038-.465a.613.613 0 0 0-.032-.198.517.517 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822.024.111.054.227.09.346z"/>
                     </svg>
                     <span class="ms-1">Download PDF</span>
                 </button>
-                <button type="button" class="btn btn-outline-primary btn-sm" id="createConfluenceBtn" title="Create in Confluence">
+                <button type="button" class="btn btn-primary btn-sm" id="createConfluenceBtn" title="Create in Confluence">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M8.293 1.293a1 1 0 0 1 1.414 0l6 6a1 1 0 0 1 0 1.414l-6 6a1 1 0 0 1-1.414-1.414L13.586 8 8.293 2.707a1 1 0 0 1 0-1.414z"/>
                         <path d="M7.293 1.293a1 1 0 0 0-1.414 0l-6 6a1 1 0 0 0 0 1.414l6 6a1 1 0 0 0 1.414-1.414L2.414 8l4.879-4.879a1 1 0 0 0 0-1.414z"/>
@@ -347,7 +354,7 @@
 
                 // PDF Download functionality
                 document.getElementById('downloadPdfBtn').addEventListener('click', function() {
-                    const original = document.querySelector('.offcanvas-body');
+                    const original = document.querySelector('.left-panel');
                     // Clone the content to avoid picking up offcanvas styles
                     const clone = original.cloneNode(true);
                     // Remove all classes and inline styles
@@ -438,6 +445,12 @@
                         btn.disabled = false;
                     }
                 });
+            });
+
+            document.querySelectorAll('g.edgeLabel').forEach(el => {
+              if (!el.hasAttribute('transform')) {
+                el.remove();
+              }
             });
 
             // Full Screen functionality
