@@ -1,3 +1,6 @@
+# Pre-Requisites
+- We need to have MSBuild tools installed in the environment to run the app.
+
 # AI Service Configuration
 
 This application now uses Amazon Bedrock Claude API for AI-powered method summaries.
