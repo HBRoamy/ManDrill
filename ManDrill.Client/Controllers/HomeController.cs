@@ -105,7 +105,8 @@ namespace ManDrill.Client.Controllers
                 }).ToList() ?? [],
                 SelectedOverload = 1,
                 AISummary = methodSummary,
-                JsonOutput = DrawCallMapper.ConvertMethodCallJsonToDrawflow(json, solutionPath) ?? "{}"
+                JsonOutput = DrawCallMapper.ConvertMethodCallJsonToDrawflow(json, solutionPath) ?? "{}",
+                IncludeAISummary = includeAISummary
             });
         }
 

@@ -231,9 +231,45 @@
     .mermaid marker path {
         fill: white !important;
     }
+    .time-saved {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.2rem 0.4rem;
+        border: 1px solid #ffc107;
+        color: #ffc107;
+        background-color: #2e2e2e;
+        border-radius: 20px;
+        box-shadow: 0 0 8px #ffc107;
+        font-weight: 500;
+        font-family: sans-serif;
+        font-size: 0.95rem;
+    }
 </style>
-<h1 class="h1">📄 [Title]</h1>
+<h1 class="h1">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 64 64" fill="none">
+        <rect x="8" y="30" width="6" height="20" fill="#FF4D4D"></rect>
+        <rect x="18" y="24" width="6" height="26" fill="#2DF3C2"></rect>
+        <rect x="28" y="28" width="6" height="22" fill="#FFDD57"></rect>
+        <rect x="38" y="18" width="6" height="32" fill="#8ED1FC"></rect>
+        <path d="M10 40 L21 30 L31 33 L41 20" stroke="#000" stroke-width="2" fill="none"></path>
+        <circle cx="10" cy="40" r="2" fill="red"></circle>
+        <circle cx="21" cy="30" r="2" fill="#2DF3C2"></circle>
+        <circle cx="31" cy="33" r="2" fill="#FFDD57"></circle>
+        <circle cx="41" cy="20" r="2" fill="#8ED1FC"></circle>
+        <circle cx="44" cy="17" r="6" stroke="#FFDD57" stroke-width="2" fill="none"></circle>
+        <line x1="48" y1="21" x2="55" y2="28" stroke="#F4B183" stroke-width="3"></line>
+    </svg>
+    [Title]</h1>
+<hr>
 
+<div class="dark-note">
+    <span class="time-saved mb-2">
+        ⚡[EstimatedMinutes] min saved
+    </span>
+    <br />
+    [Explanation]
+</div>
 <h2>💼 Business Context</h2>
 <p>[BusinessContext]</p>
 <hr>

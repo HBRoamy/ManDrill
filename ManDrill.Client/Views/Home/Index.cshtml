@@ -2,6 +2,10 @@
 
 <style>
     /* ManDrill Custom Theme - Modern Gradient & 3D Depth */
+    .bottom-2 {
+        bottom: 2px;
+    }
+
     .mdr-card {
         background: linear-gradient(145deg, #232526 0%, #2d2d2d 100%);
         border: 1px solid #353535;
@@ -86,20 +90,19 @@
         color: #11998e !important;
     }
     .mdr-bg{
-        background: linear-gradient(135deg, #7b2ff7, #00c6ff);
+        background: linear-gradient(90deg, #065f46 0%, #06b6d4 100%);
     }
 
     .ai-summary-button {
         display: inline-flex;
         align-items: center;
         border: none;
-        padding: 10px 20px 10px 5px;
+        padding: 5px 10px 5px 5px;
         cursor: pointer;
-        background: none;
         position: relative;
         font-size: 16px;
         overflow: hidden;
-        border-radius: 30px;
+        border-radius: 10px;
     }
 
     .ai-summary-background {
@@ -108,7 +111,6 @@
         top: 0;
         bottom: 0;
         width: 100%;
-        background: linear-gradient(135deg, #7b2ff7, #00c6ff);
         z-index: 0;
         transition: width 0.4s ease;
         border-radius: 30px;
@@ -136,6 +138,16 @@
         margin-top: 5px;
     }
 
+    .dark-note {
+        background-color: #2e2e2e; /* dark gray */
+        color: #f0f0f0; /* light text for contrast */
+        border: 1px solid #ffc107; /* light-ish border */
+        border-left: 6px solid #ffc107; /* thick light left border */
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 4px;
+        font-family: sans-serif;
+    }
 
 </style>
 
@@ -228,14 +240,14 @@
 @if (!string.IsNullOrEmpty(Model?.JsonOutput))
 {
     <div class="container mt-5">
-        <div class="card shadow-lg">
-            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+        <div class="card shadow-lg" id="card-drawflow">
+            <div class="card-header mdr-bg text-white d-flex justify-content-between align-items-center">
                 <h3 class="h5 mb-0">Visualization</h3>
                 <div>
-                    @if (!Model.IncludeAISummary)
+                    
+                    @if (Model.IncludeAISummary)
                     {
-                        <button class="ai-summary-button" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-                            <div class="ai-summary-background"></div>
+                        <button class="ai-summary-button mdr-bg" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
                             <div class="ai-summary-content">
                                 <div class="ai-summary-logo-text">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
@@ -245,9 +257,17 @@
                                 </div>
                                 <span>AI Summary</span>
                             </div>
-
                         </button>
                     }
+                    <button class="ai-summary-button bg-transparent bottom-2" type="button" id="fullscreenBtn" title="Toggle Full Screen">
+                        <div class="ai-summary-content">
+                            <div class="ai-summary-logo-text">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
                 </div>
             </div>
             <div class="card-body p-2">
@@ -411,6 +431,30 @@
                         btn.disabled = false;
                     }
                 });
+            });
+
+            // Full Screen functionality
+            const cardDrawflow = document.getElementById('card-drawflow');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+            fullscreenBtn.addEventListener('click', () => {
+                if (!document.webkitIsFullScreen) {
+                    if (cardDrawflow.requestFullscreen) {
+                        cardDrawflow.requestFullscreen();
+                    } else if (cardDrawflow.webkitRequestFullscreen) {
+                        cardDrawflow.webkitRequestFullscreen();
+                    } else if (cardDrawflow.msRequestFullscreen) {
+                        cardDrawflow.msRequestFullscreen();
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                }
             });
 
             const connection = new signalR.HubConnectionBuilder()
