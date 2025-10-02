@@ -16,8 +16,6 @@ namespace ManDrill.Client.Models
         [Required(ErrorMessage = "Method name is required.")]
         public string MethodName { get; set; }
 
-        public List<OverloadInfo> Overloads { get; set; } = new();
-
         public int SelectedOverload { get; set; }
 
         public string JsonOutput { get; set; }
@@ -25,5 +23,25 @@ namespace ManDrill.Client.Models
         public string AISummary { get; set; } = string.Empty;
 
         public bool IncludeAISummary { get; set; }
+        public string MethodSequenceDiagram { get; set; }
+        public string ProjectDependencyDiagram { get; set; }
+        /// <summary>
+        /// Dictionary with KEY: Diagram Name, VALUE: Diagram code, mostly mermaid code
+        /// </summary>
+        public List<DiagramDetails> Diagrams { get; set; } = [];
+        /// <summary>
+        /// List of dependency index items showing project dependencies for the analyzed method
+        /// </summary>
+        public List<DependencyIndexItem> DependencyIndexItems { get; set; } = new List<DependencyIndexItem>();
+        public List<List<string>> Ancestors { get; set; } = [];
+        public string MethodCallJson { get; set; }
+    }
+
+    public class DiagramDetails
+    {
+        public string Name { get; set; }
+        public object DiagramInputData { get; set; }
+        public string DiagramPartialViewName { get; set; }
+        public string AdditionalTitleAttributes { get; set; }
     }
 }

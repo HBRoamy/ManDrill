@@ -20,6 +20,7 @@ html {
 body {
     margin-bottom: 60px;
     font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
 }
 
 ::-webkit-scrollbar {
@@ -55,7 +56,7 @@ body {
 .df-node.custom-node {
     background: #1e1e1e;
     color: #e0e0e0;
-    border-radius: 0.5rem;
+    border-radius: 0.2rem;
     border: 1px solid #333;
     font-size: 0.85rem;
     box-shadow: 0 4px 10px rgba(0,0,0,0.4);
@@ -65,7 +66,7 @@ body {
 }
 
 .df-node-title {
-    background: linear-gradient(90deg, #0052cc, #007bff);
+    background: linear-gradient(90deg, #065f46 0%, #06b6d4 100%);
     color: white;
     font-weight: bold;
     padding: 6px 10px;
@@ -198,4 +199,237 @@ body {
 #analyzerFormCollapseToggle:active {
     outline: none !important;
     box-shadow: none !important;
+}
+
+.bottom-2 {
+    bottom: 2px;
+}
+
+.heading-glow {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffc107;
+    text-shadow: 0 0 8px #ffc107;
+}
+
+.mdr-card {
+    background: linear-gradient(145deg, #232526 0%, #2d2d2d 100%);
+    border: 1px solid #353535;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.25), 0 1.5px 6px 0 rgba(0,0,0,0.18);
+    border-radius: 16px;
+}
+
+.nav-link
+{
+    color: greenyellow !important;
+}
+
+.nav-item > .active {
+    background: black !important;
+    color: white !important;
+}
+
+.mdr-card-header {
+    background: linear-gradient(90deg, #0f2027 0%, #2c5364 100%);
+    border-bottom: 1.5px solid #1a1a1a;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.mdr-title {
+    color: #2de38c;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.18);
+}
+
+.mdr-card-body {
+    background: linear-gradient(135deg, #232526 0%, #313131 100%);
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+.mdr-form {
+    color: #e0e0e0;
+}
+
+.mdr-label {
+    color: #2de38c;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.10);
+}
+
+.mdr-input {
+    background: linear-gradient(90deg, #232526 0%, #353535 100%);
+    border: 1.5px solid #444;
+    color: #e0e0e0 !important;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.10);
+}
+
+    .mdr-input:focus {
+        background: linear-gradient(90deg, #232526 0%, #353535 100%);
+        border-color: #2de38c;
+        box-shadow: 0 0 0 0.2rem rgba(45, 227, 140, 0.18);
+    }
+
+.mdr-checkbox {
+    background-color: #232526;
+    border-color: #444;
+}
+
+    .mdr-checkbox:checked {
+        background-color: #2de38c;
+        border-color: #2de38c;
+    }
+
+.mdr-checkbox-label {
+    color: #2de38c;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.10);
+}
+
+.mdr-submit-btn {
+    background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%) !important;
+    border: none !important;
+    color: #fff !important;
+    font-weight: 600;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px 0 rgba(56,239,125,0.10);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+    .mdr-submit-btn:hover {
+        background: linear-gradient(90deg, #38ef7d 0%, #11998e 100%) !important;
+        box-shadow: 0 4px 16px 0 rgba(56,239,125,0.18);
+    }
+
+.mdr-toggle-btn {
+    color: #2de38c !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.10);
+}
+
+    .mdr-toggle-btn:hover {
+        color: #11998e !important;
+    }
+
+.mdr-bg {
+    background: linear-gradient(90deg, #065f46 0%, #06b6d4 100%);
+}
+
+.ai-summary-button {
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    padding: 5px 10px 5px 5px;
+    cursor: pointer;
+    position: relative;
+    font-size: 16px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.ai-summary-background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 0;
+    transition: width 0.4s ease;
+    border-radius: 30px;
+}
+
+.ai-summary-button:hover .ai-summary-background {
+    width: 100%;
+}
+
+.ai-summary-content {
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    color: white;
+}
+
+.ai-summary-logo-text {
+    display: flex;
+    align-items: center;
+}
+
+.ai-summary-button svg {
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+.dark-note {
+    background-color: #2e2e2e; /* dark gray */
+    color: #f0f0f0; /* light text for contrast */
+    border: 1px solid #ffc107; /* light-ish border */
+    border-left: 6px solid #ffc107; /* thick light left border */
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+    font-family: sans-serif;
+}
+
+.offcanvas-body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+}
+
+/* Force dark-friendly colors */
+/*.mermaid svg {
+    --mermaid-font-color: white;
+    --mermaid-line-color: white;
+    --mermaid-label-bg-color: transparent;
+    --mermaid-edge-color: white;
+    --mermaid-actor-border-color: white;
+    --mermaid-sequence-number-color: white;
+    color: white;
+}*/
+
+.mermaid .actor {
+    fill: #222; /* Dark fill for lifelines */
+}
+
+/* Mermaid sequence diagram container */
+.mermaid-sequence-container {
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+    overflow: auto
+}
+
+.mermaid-sequence-container .mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mermaid-sequence-container svg {
+    max-width: 100%;
+    height: auto;
+    background-color: #1e1e1e;
+}
+
+    .mermaid-sequence-container .mermaid svg {
+        width: auto !important;
+        min-width: 0;
+        height: auto !important;
+        min-height: 500px;
+        max-width: none !important;
+        display: block;
+        margin: 0 auto;
+    }
+
+.accordion-button::after {
+    filter: invert(1) !important; /* Makes the arrow white */
 }

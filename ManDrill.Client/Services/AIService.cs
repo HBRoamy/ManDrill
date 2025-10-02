@@ -34,7 +34,7 @@ namespace ManDrill.Client.Services
         /// <summary>
         /// The Claude model ID to use for generating summaries
         /// </summary>
-        private const string ClaudeModelId = "us.anthropic.claude-3-7-sonnet-20250219-v1:0";// TODO: Try moving it to the config
+        private const string ClaudeModelId = "anthropic.claude-3-5-sonnet-20240620-v1:0";// TODO: Try moving it to the config anthropic.claude-3-5-sonnet-20240620-v1:0
 
         #endregion
 
@@ -94,6 +94,86 @@ namespace ManDrill.Client.Services
             }
         }
 
+        public async Task<ImplementationInfo?> SelectBestImplementationAsync(AIContext context)
+        {
+            // For now, just return the first available implementation
+            // TODO: Implement a more sophisticated selection mechanism using AI
+            var prompt = $@"
+You are an expert C# architect. Your task is to select the best implementation of an interface method for a given usage scenario.
+
+Instructions:
+- Carefully analyze the provided interface method signature, the call site, and the call context.
+- Review the list of available implementations. Each implementation includes the type name and method signature.
+- Consider which implementation is most likely used for the scenario, based on business logic, dependencies, and the calling context.
+- Output ONLY a valid JSON object with this structure (no markdown, no extra text):
+
+{{
+""SelectedImplementation"": ""<FullTypeName of the chosen implementation>"",
+""Reasoning"": ""<Your concise justification>"",
+""Accuracy"": [""<FullTypeName>"", ...]
+}}
+
+Interface Method:
+{context.InterfaceMethod}
+
+Call Site:
+{context.CallSite}
+
+Call Context:
+{context.CallContext}
+
+Available Implementations:
+{string.Join("\n", context.AvailableImplementations.Select(i => $"- {i.FullTypeName}: {i.MethodSignature}"))}
+
+REMEMBER: Output ONLY the JSON object, no additional text or formatting.
+";
+            var requestBody = new
+            {
+                anthropic_version = "bedrock-2023-05-31",
+                max_tokens = 30000,
+                temperature = 0.1,
+                messages = new[]
+               {
+                    new
+                    {
+                        role = "user",
+                        content = prompt
+                    }
+                }
+            };
+
+            var requestBodyJson = JsonSerializer.Serialize(requestBody);
+            var requestBodyBytes = System.Text.Encoding.UTF8.GetBytes(requestBodyJson);
+            var request = new InvokeModelRequest
+            {
+                ModelId = ClaudeModelId,
+                ContentType = "application/json",
+                Body = new MemoryStream(requestBodyBytes)
+            };
+
+            var response = await _bedrockClient.InvokeModelAsync(request);
+
+            using var reader = new StreamReader(response.Body);
+            var responseJson = await reader.ReadToEndAsync();
+            Console.WriteLine("-----------------------------");
+            Console.WriteLine(responseJson);
+            var responseData = JsonSerializer.Deserialize<JsonElement>(responseJson);
+            var aiResponse = responseData.GetProperty("content")[0].GetProperty("text").GetString();
+
+            if (string.IsNullOrEmpty(aiResponse))
+                return null;
+
+            // Parse the AI response JSON
+            var aiResponseJson = JsonDocument.Parse(aiResponse);
+            var selectedTypeName = aiResponseJson.RootElement.GetProperty("SelectedImplementation").GetString();
+
+            // Find the matching implementation
+            var selectedImpl = context.AvailableImplementations
+                .FirstOrDefault(i => string.Equals(i.FullTypeName, selectedTypeName, StringComparison.OrdinalIgnoreCase));
+
+            return selectedImpl;
+        }
+
         #endregion
 
         #region Private Methods
@@ -128,7 +208,7 @@ namespace ManDrill.Client.Services
                 "BusinessContext": "4-6 non-technical sentences about what this method achieves in business terms, why it matters, and when it is used",
                 "TechnicalContext": "4-6 sentences describing the method's purpose, logic, and role in the overall system. Mention dependencies, data flow, or critical considerations",
                 "KeyOperations": ["6-7 items each max 8 words highlighting main operations or transformations done by this method"],
-                "FlowDiagram": "Convert the JSON method call data into a VALID Mermaid.js flowchart.
+                "FlowDiagram": "Convert the JSON method call data into a VALID, comprehensive and abstract Mermaid.js flowchart.
                     STRICT RULES:
                     - Use simple node labels (no spaces, dashes, or special characters in IDs)
                     - Keep it simple - no subgraphs, no complex labels
@@ -139,13 +219,17 @@ namespace ManDrill.Client.Services
                     - You MAY use inline CSS class markers appended to node lines (e.g. `:::processNode`, `:::decisionNode`, `:::dataNode`) — but DO NOT define them
                     - Use |labels| for decision branches
                     - Only use --> arrows (no dotted arrows)
-                    - Output MUST contain ONLY the flowchart definition, nothing else",
+                    - Output MUST contain ONLY the flowchart definition, nothing else
+                    - Should cover everything in the flow",
                 "Parameters": {"paramName": "explanation", "anotherParam": "explanation"},
                 "Dependencies": ["list of internal/external libraries, services or methods this depends on"],
                 "PerformanceNotes": "Highlight any performance-sensitive logic, caching, or scalability concerns",
                 "Conclusion": "Meaningful conclusion in 3-4 sentences",
                 "TimeSaved": {
-                    "estimateMinutes": "Estimate, in minutes, how much time a developer or architect would save by reading your generated report instead of manually analyzing the code. Base your answer on the provided method and its complexity."
+                    "estimateMinutes": "Estimate, in minutes but as a string, how much time a senior developer would save by reading your generated report instead of manually analyzing the code.
+                                        - Base your answer on the provided below method implementation, flow data depth, and their cyclomatic complexity. 
+                                        - Give the best case estimate. 
+                                        - Provide estimate between 1 minute to 120 minutes."
                 }
             }
             """;
@@ -216,9 +300,10 @@ namespace ManDrill.Client.Services
             try
             {
                 // Parse the AI response into our model
-                var summaryResponse = JsonSerializer.Deserialize<MethodSummaryResponse>(aiResponse);
-                Console.WriteLine();
-                Console.WriteLine(summaryResponse.FlowDiagram);
+                var summaryResponse = JsonSerializer.Deserialize<MethodSummaryResponse>(aiResponse, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true // helps with camelCase vs PascalCase
+                });
                 return GenerateHtmlFromFile(summaryResponse, "wwwroot/pdf-template.html");
             }
             catch (JsonException ex)
@@ -226,6 +311,47 @@ namespace ManDrill.Client.Services
                 Console.WriteLine($"Error parsing AI response: {ex.Message}");
                 return "Error parsing AI response";
             }
+        }
+
+        public async Task<string> GenerateAnswerWithClaude(string prompt)
+        {
+            // Create the request payload for Claude
+            var requestBody = new
+            {
+                anthropic_version = "bedrock-2023-05-31",
+                max_tokens = 30000,
+                temperature = 0.1,
+                messages = new[]
+                {
+                    new
+                    {
+                        role = "user",
+                        content = prompt
+                    }
+                }
+            };
+
+            var requestBodyJson = JsonSerializer.Serialize(requestBody);
+            var requestBodyBytes = System.Text.Encoding.UTF8.GetBytes(requestBodyJson);
+            var request = new InvokeModelRequest
+            {
+                ModelId = ClaudeModelId,
+                ContentType = "application/json",
+                Body = new MemoryStream(requestBodyBytes)
+            };
+
+            var response = await _bedrockClient.InvokeModelAsync(request);
+
+            using var reader = new StreamReader(response.Body);
+            var responseJson = await reader.ReadToEndAsync();
+
+            var responseData = JsonSerializer.Deserialize<JsonElement>(responseJson);
+            var aiResponse = responseData.GetProperty("content")[0].GetProperty("text").GetString();
+
+            if (string.IsNullOrEmpty(aiResponse))
+                return "Summary generation failed";
+
+            return aiResponse;
         }
 
         public async Task<string> CreateDraftPage(string htmlContent)
@@ -288,7 +414,7 @@ namespace ManDrill.Client.Services
                                .Replace("[FlowDiagram]", model.FlowDiagram ?? "")
                                .Replace("[PerformanceNotes]", model.PerformanceNotes ?? "")
                                .Replace("[Conclusion]", model.Conclusion ?? "")
-                               .Replace("[EstimatedMinutes]", model.TimeSaved["estimateMinutes"]);
+                               .Replace("[EstimatedMinutes]", model.TimeSaved.EstimateMinutes.ToString());
 
             // Build KeyOperations
             var keyOps = new StringBuilder();

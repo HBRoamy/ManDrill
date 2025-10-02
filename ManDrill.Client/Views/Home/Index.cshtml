@@ -1,181 +1,16 @@
 ﻿@model AnalyzerViewModel
 
-<style>
-    /* ManDrill Custom Theme - Modern Gradient & 3D Depth */
-    .bottom-2 {
-        bottom: 2px;
-    }
-
-    .heading-glow {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #ffc107;
-        text-shadow: 0 0 8px #ffc107;
-    }
-
-    .mdr-card {
-        background: linear-gradient(145deg, #232526 0%, #2d2d2d 100%);
-        border: 1px solid #353535;
-        box-shadow: 0 8px 32px 0 rgba(0,0,0,0.25), 0 1.5px 6px 0 rgba(0,0,0,0.18);
-        border-radius: 16px;
-    }
-
-    .mdr-card-header {
-        background: linear-gradient(90deg, #0f2027 0%, #2c5364 100%);
-        border-bottom: 1.5px solid #1a1a1a;
-        box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
-        border-top-left-radius: 16px;
-        border-top-right-radius: 16px;
-    }
-
-    .mdr-title {
-        color: #2de38c;
-        text-shadow: 0 2px 6px rgba(0,0,0,0.18);
-    }
-
-    .mdr-card-body {
-        background: linear-gradient(135deg, #232526 0%, #313131 100%);
-        border-bottom-left-radius: 16px;
-        border-bottom-right-radius: 16px;
-    }
-
-    .mdr-form {
-        color: #e0e0e0;
-    }
-
-    .mdr-label {
-        color: #2de38c;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.10);
-    }
-
-    .mdr-input {
-        background: linear-gradient(90deg, #232526 0%, #353535 100%);
-        border: 1.5px solid #444;
-        color: #e0e0e0 !important;
-        border-radius: 8px;
-        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.10);
-    }
-
-    .mdr-input:focus {
-        background: linear-gradient(90deg, #232526 0%, #353535 100%);
-        border-color: #2de38c;
-        box-shadow: 0 0 0 0.2rem rgba(45, 227, 140, 0.18);
-    }
-
-    .mdr-checkbox {
-        background-color: #232526;
-        border-color: #444;
-    }
-    .mdr-checkbox:checked {
-        background-color: #2de38c;
-        border-color: #2de38c;
-    }
-    .mdr-checkbox-label {
-        color: #2de38c;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.10);
-    }
-
-    .mdr-submit-btn {
-        background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%) !important;
-        border: none !important;
-        color: #fff !important;
-        font-weight: 600;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px 0 rgba(56,239,125,0.10);
-        transition: background 0.2s, box-shadow 0.2s;
-    }
-    .mdr-submit-btn:hover {
-        background: linear-gradient(90deg, #38ef7d 0%, #11998e 100%) !important;
-        box-shadow: 0 4px 16px 0 rgba(56,239,125,0.18);
-    }
-
-    .mdr-toggle-btn {
-        color: #2de38c !important;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.10);
-    }
-    .mdr-toggle-btn:hover {
-        color: #11998e !important;
-    }
-    .mdr-bg{
-        background: linear-gradient(90deg, #065f46 0%, #06b6d4 100%);
-    }
-
-    .ai-summary-button {
-        display: inline-flex;
-        align-items: center;
-        border: none;
-        padding: 5px 10px 5px 5px;
-        cursor: pointer;
-        position: relative;
-        font-size: 16px;
-        overflow: hidden;
-        border-radius: 10px;
-    }
-
-    .ai-summary-background {
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 100%;
-        z-index: 0;
-        transition: width 0.4s ease;
-        border-radius: 30px;
-    }
-
-    .ai-summary-button:hover .ai-summary-background {
-        width: 100%;
-    }
-
-    .ai-summary-content {
-        display: flex;
-        align-items: center;
-        position: relative;
-        z-index: 1;
-        color: white;
-    }
-
-    .ai-summary-logo-text {
-        display: flex;
-        align-items: center;
-    }
-
-    .ai-summary-button svg {
-        margin-right: 5px;
-        margin-top: 5px;
-    }
-
-    .dark-note {
-        background-color: #2e2e2e; /* dark gray */
-        color: #f0f0f0; /* light text for contrast */
-        border: 1px solid #ffc107; /* light-ish border */
-        border-left: 6px solid #ffc107; /* thick light left border */
-        padding: 1rem;
-        margin: 1rem 0;
-        border-radius: 4px;
-        font-family: sans-serif;
-    }
-
-    .offcanvas-body {
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        overflow: hidden;
-        display: flex;
-    }
-</style>
-
 <div class="container mt-5">
     <div class="card shadow-lg mdr-card">
         <div class="card-header mdr-bg rounded-bottom-1 text-white d-flex justify-content-between align-items-center py-2 mdr-card-header">
             <h2 class="h5 mb-0">Method Analyzer</h2>
             <button id="analyzerFormCollapseToggle"
-                    class="btn p-0 border-0 bg-transparent mdr-toggle-btn"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#analyzerFormCollapse"
-                    aria-expanded="true"
-                    aria-controls="analyzerFormCollapse"
-                    title="Toggle Analyzer Form">
+            class="btn p-0 border-0 bg-transparent mdr-toggle-btn"
+            data-bs-toggle="collapse"
+            data-bs-target="#analyzerFormCollapse"
+            aria-expanded="true"
+            aria-controls="analyzerFormCollapse"
+            title="Toggle Analyzer Form">
                 <svg id="chevronIcon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" viewBox="0 0 16 16" style="transition: transform 0.2s;">
                     <path fill-rule="evenodd" d="M1.646 5.646a.5.5 0 0 1 .708 0L8 11.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
                 </svg>
@@ -204,25 +39,26 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold mdr-label" for="methodNameInput">Method Name</label>
-                        <input type="text" class="form-control form-control-sm mdr-input" id="methodNameInput" name="methodNameInput" value="@Model.MethodName" />
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label fw-bold mdr-label" for="methodNameInput">Method Name</label>
+                            <input type="text" class="form-control form-control-sm mdr-input" id="methodNameInput" name="methodNameInput" value="@Model.MethodName" />
+                        </div>
+
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label fw-bold mdr-label" for="methodNameInput">Overload Number</label>
+                            <input type="text" class="form-control form-control-sm mdr-input" id="overloadNumber" name="overloadNumber" value="@Model.SelectedOverload" />
+                        </div>
                     </div>
 
                     <div class="mb-3 form-check">
                         <input type="checkbox"
-                               class="form-check-input mdr-checkbox"
-                               id="includeAISummary"
-                               name="includeAISummary"
+                        class="form-check-input mdr-checkbox"
+                        id="includeAISummary"
+                        name="includeAISummary"
                         @(Model.IncludeAISummary ? "checked" : "") value="true" />
                         <label class="form-check-label fw-bold mdr-checkbox-label" for="includeAISummary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                <!-- Large star -->
-                                <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162z" />
-
-                                <!-- Small star -->
-                                <path d="M13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
-                            </svg> Include AI Summary
+                            <i class="bi bi-stars"></i> Include AI Summary
                         </label>
                     </div>
 
@@ -239,9 +75,9 @@
 <div class="container mt-3">
     <div id="progressWrapper" class="progress" style="height:1.5rem; display:none; position: relative;">
         <div id="progressBar"
-             class="progress-bar progress-bar-striped progress-bar-animated"
-             role="progressbar"
-             style="width:0%; height:100%;">
+        class="progress-bar progress-bar-striped progress-bar-animated"
+        role="progressbar"
+        style="width:0%; height:100%;">
             0%
         </div>
     </div>
@@ -250,6 +86,52 @@
     </div>
 </div>
 
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/progressHub")
+            .build();
+
+        connection.on("ReportProgress", (message, percent) => {
+            document.getElementById("progressWrapper").style.display = "block";
+
+            const msgEl = document.getElementById("progressMessage");
+            msgEl.textContent = message;
+            const bar = document.getElementById("progressBar");
+            bar.style.width = percent + "%";
+            bar.textContent = percent + "%";
+            if (percent >= 100) {
+                setTimeout(() => document.getElementById("progressWrapper").style.display = "none", 500);
+                msgEl.textContent = "";
+            }
+        });
+
+        connection.start().catch(console.error);
+
+        // Reset button state on page load
+        const submitBtn = document.getElementById("generateGraphBtn");
+        const spinner = document.getElementById("loaderSpinner");
+        submitBtn.disabled = false;
+        spinner.style.display = "none";
+
+        // Handle form submission to show progress bar
+        document.querySelector('form').addEventListener('submit', function(e) {
+            // Show progress bar immediately
+            document.getElementById("progressWrapper").style.display = "block";
+            document.getElementById("progressMessage").textContent = "Starting analysis...";
+            document.getElementById("progressBar").style.width = "0%";
+            document.getElementById("progressBar").textContent = "0%";
+            
+            // Show spinner on submit button
+            spinner.style.display = "inline-block";
+            submitBtn.disabled = true;
+            
+            // Allow the form to submit normally (page will reload with results)
+            // The progress updates will come through SignalR during the server processing
+        });
+    });
+</script>
 
 @if (!string.IsNullOrEmpty(Model?.JsonOutput))
 {
@@ -258,16 +140,13 @@
             <div class="card-header mdr-bg text-white d-flex justify-content-between align-items-center">
                 <h3 class="h5 mb-0">Visualization</h3>
                 <div class="d-flex align-items-center gap-1">
-                    
+
                     @if (Model.IncludeAISummary)
                     {
                         <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
                             <div class="ai-summary-content">
                                 <div class="ai-summary-logo-text">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162z" />
-                                        <path d="M13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
-                                    </svg>
+                                    <i class="bi bi-stars"></i>
                                 </div>
                                 <span>AI Summary</span>
                             </div>
@@ -284,36 +163,236 @@
                     </button>
                 </div>
             </div>
-            <div class="card-body p-2">
-                <div id="drawflow" style="width:100%; height:100vh; min-height:500px;"></div>
-            </div>
+            @*
+                Nav Tabs Below
+            *@
+           <div class="card card-body">
+                <ul class="nav nav-tabs mt-2" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Interactive Flow Diagram</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Method Call Hierarchy</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="project-dependency-tab" data-bs-toggle="tab" data-bs-target="#project-dependency-tab-pane" type="button" role="tab" aria-controls="project-dependency-tab-pane" aria-selected="false">
+                            Project Topology
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="dependency-index-tab" data-bs-toggle="tab" data-bs-target="#dependency-index-tab-pane" type="button" role="tab" aria-controls="dependency-index-tab-pane" aria-selected="false">
+                            Namespace Dependencies <span class="badge bg-info text-dark">@(Model?.DependencyIndexItems?.Count ?? 0)</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="ancestors-index-tab" data-bs-toggle="tab" data-bs-target="#ancestors-tab-pane" type="button" role="tab" aria-controls="ancestors-tab-pane" aria-selected="false">
+                            Dependent Parties <span class="badge bg-warning text-dark">@(Model?.Ancestors?.Count() ?? 0)</span>
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                        <div class="card-body p-2">
+                            <div id="drawflow" style="width:100%; height:100vh; min-height:500px;"></div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                        @* @if (!string.IsNullOrWhiteSpace(Model?.MermaidSequenceDiagram)) *@
+                        @* { *@
+                        <div class="card card-body">
+                            <!-- Top right: download button -->
+                            <div class="d-flex justify-content-end mb-2">
+                                <button type="button" class="btn btn-sm btn-outline-warning" id="downloadSequenceDiagramSVG" title="Download Flow Diagram SVG">
+                                    <i class="bi bi-download"></i>
+                                    <span class="ms-1">Download SVG</span>
+                                </button>
+                            </div>
+                                <div class="position-absolute mb-2" style="z-index:10; width:200px;">
+                                    <div class="btn-group btn-group-sm m-2" style="z-index:10;">
+                                        <button type="button" class="btn btn-outline-light" id="zoomInButton" title="Zoom In">
+                                            <i class="bi bi-zoom-in"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-light" id="zoomOutButton" title="Zoom Out">
+                                            <i class="bi bi-zoom-out"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-light" id="resetButton" title="Reset Zoom">
+                                            <i class="bi bi-arrow-counterclockwise"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            <!-- Diagram container -->
+                            <div class="mermaid-sequence-container position-relative" style="width:100%;height:80vh;overflow:hidden;border:1px solid #ccc;">
+
+                                <!-- Mermaid diagram -->
+                                <div id="panzoom-element" class="mermaid w-100 h-100">
+                                    @Model.MethodSequenceDiagram
+                                </div>
+                            </div>
+                        </div>
+
+                        @* } *@
+                    </div>
+                    <div class="tab-pane fade active" id="project-dependency-tab-pane" role="tabpanel" aria-labelledby="project-dependency-tab" tabindex="0">
+                        @* @if (!string.IsNullOrWhiteSpace(Model?.MermaidSequenceDiagram)) *@
+                        @* { *@
+                        <div class="card card-body">
+                            <span class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-sm btn-outline-warning ms-2" id="downloadDependencyDiagramSVG" title="Download Flow Diagram SVG">
+                                    <i class="bi bi-download"></i>
+                                    <span class="ms-1">Download SVG</span>
+                                </button>
+                            </span>
+                            <div class="mermaid-sequence-container" >
+                                <div id="mermaid-project-diagram" class="mermaid">
+                                    @Model.ProjectDependencyDiagram
+                                </div>
+                            </div>
+                        </div>
+                        @* } *@
+                    </div>
+                    <div class="tab-pane fade" id="dependency-index-tab-pane" role="tabpanel" aria-labelledby="dependency-index-tab" tabindex="0">
+                        @if (Model?.DependencyIndexItems?.Any() == true)
+                        {
+                            <div class="card-body collapse show" id="dependencyTableCollapse">
+                                <div class="table-responsive">
+                                    <table class="table table-dark table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="fw-bold">Project Name</th>
+                                                <th scope="col" class="fw-bold">Namespace</th>
+                                                <th scope="col" class="fw-bold text-center">Times Referenced</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.DependencyIndexItems)
+                                            {
+                                                <tr>
+                                                    <td class="fw-semibold text-info">@item.ProjectName</td>
+                                                    <td class="text-light">@item.Namespace</td>
+                                                    <td class="text-center">
+                                                        <span class="badge bg-warning text-dark fs-6">@item.TimesReferenced</span>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="tab-pane fade text-light" id="ancestors-tab-pane" role="tabpanel" aria-labelledby="ancestors-tab" tabindex="0">
+                        <div class="alert border border-danger bg-transparent text-danger mt-2" role="alert">
+                            CAUTION: Includes Subpaths
+                        </div>
+
+                        <div style="height: 700px; overflow-y:scroll; overflow-x:hidden;">
+                            @if (Model.Ancestors != null && Model.Ancestors.Any())
+                            {
+
+                                <div class="accordion" id="ancestorsAccordion">
+                                    @{
+                                        int accordionIndex = 0;
+                                        foreach (var path in Model.Ancestors.OrderByDescending(p => p.Count()))
+                                        {
+                                            <div class="accordion-item bg-dark border-secondary">
+                                                <h3 class="accordion-header" id="heading@(accordionIndex)">
+                                                    <button class="accordion-button collapsed bg-dark text-light"
+                                                            type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#collapse@(accordionIndex)"
+                                                            aria-expanded="false"
+                                                            aria-controls="collapse@(accordionIndex)">
+                                                        <span class="d-flex justify-content-between w-100 me-3">
+                                                            <span class=" me-2" style="min-width: 0;">
+                                                                @(accordionIndex + 1) :
+                                                                <span class="text-info">@(path[^1].Length > 100 ? path[^1].Substring(0, 100) + "..." : path[^1])</span>
+                                                            </span>
+                                                            <span class="badge bg-secondary flex-shrink-0">@path.Count() steps</span>
+                                                        </span>
+
+                                                    </button>
+                                                </h3>
+                                                <div id="collapse@(accordionIndex)"
+                                                     class="accordion-collapse collapse"
+                                                     aria-labelledby="heading@(accordionIndex)"
+                                                     data-bs-parent="#ancestorsAccordion">
+                                                    <div class="accordion-body">
+                                                        <nav aria-label="breadcrumb">
+                                                            <ol class="breadcrumb bg-dark p-2 rounded">
+                                                                @for (int i = path.Count() - 1; i >= 1; i--)
+                                                                {
+                                                                    <li class="breadcrumb-item text-light">
+                                                                        <code>@path.ElementAt(i)</code>
+                                                                        <span>&nbsp;&rarr;</span>
+                                                                    </li>
+                                                                }
+                                                                <li class="breadcrumb-item active text-success">
+                                                                    <strong>@path[0]</strong>
+                                                                </li>
+                                                            </ol>
+                                                        </nav>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            accordionIndex++;
+                                        }
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No ancestors found.</p>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+           </div>
         </div>
     </div>
+
+    @await Html.PartialAsync("_ChatbotPartial", Model.MethodCallJson)
 
     <div class="offcanvas offcanvas-end bg-dark text-light" style="--bs-offcanvas-width: 100%;" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
         <div class="offcanvas-header border-bottom border-secondary d-flex justify-content-between align-items-center">
             <h4 class="offcanvas-title heading-glow" id="offcanvasWithBothOptionsLabel">AI Summary</h4>
+            <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/mandrill.png" alt="ManDrill Logo" style="height:50px; width:auto; margin-right:8px;" />
+                ManDrill
+            </a>
             <div class="d-flex gap-2 align-items-center">
-                <button type="button" class="btn btn-warning btn-sm ms-2" id="downloadMermaidSVG" title="Download Flow Diagram SVG">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-diagram-3" viewBox="0 0 16 16">
-                        <path d="M2 0a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm0 1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zm10-1a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2zm0 1h-2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 10a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm0 1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1zm10-1a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2zm0 1h-2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1z" />
-                    </svg>
-                    <span class="ms-1">Download Flow Diagram SVG</span>
-                </button>
-                <button type="button" class="btn btn-success btn-sm" id="downloadPdfBtn" title="Download as PDF">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-pdf" viewBox="0 0 16 16">
-                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
-                        <path d="M4.603 14.087a.81.81 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.68 7.68 0 0 1 1.482-.645 19.701 19.701 0 0 0 1.062-2.227 7.269 7.269 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a10.954 10.954 0 0 0 .98 1.686 5.753 5.753 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.856.856 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.716 5.716 0 0 1-.911-.95 11.642 11.642 0 0 0-1.997.406 11.311 11.311 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.793.793 0 0 1-.58.029zm1.379-1.901c-.166.076-.32.156-.459.238-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361.01.022.02.036.026.044a.27.27 0 0 0 .035-.012c.137-.056.355-.235.635-.572a8.18 8.18 0 0 0 .45-.606zm1.64-1.33a12.647 12.647 0 0 1 1.01-.193 11.666 11.666 0 0 1-.51-.858 20.741 20.741 0 0 1-.5 1.05zm2.446.45c.15.162.296.3.435.41.24.19.407.253.498.256a.107.107 0 0 0 .07-.015.307.307 0 0 0 .094-.125.436.436 0 0 0 .059-.2.095.095 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a3.881 3.881 0 0 0-.612-.053zM8.078 7.8a6.7 6.7 0 0 0 .2-.828c.031-.188.043-.343.038-.465a.613.613 0 0 0-.032-.198.517.517 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822.024.111.054.227.09.346z"/>
-                    </svg>
-                    <span class="ms-1">Download PDF</span>
-                </button>
-                <button type="button" class="btn btn-primary btn-sm" id="createConfluenceBtn" title="Create in Confluence">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8.293 1.293a1 1 0 0 1 1.414 0l6 6a1 1 0 0 1 0 1.414l-6 6a1 1 0 0 1-1.414-1.414L13.586 8 8.293 2.707a1 1 0 0 1 0-1.414z"/>
-                        <path d="M7.293 1.293a1 1 0 0 0-1.414 0l-6 6a1 1 0 0 0 0 1.414l6 6a1 1 0 0 0 1.414-1.414L2.414 8l4.879-4.879a1 1 0 0 0 0-1.414z"/>
-                    </svg>
-                    <span class="ms-1">Create Confluence Page</span>
-                </button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Export Options
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                        <li>
+                            <button type="button" class="dropdown-item" id="downloadMermaidSVG" title="Download Flow Diagram SVG">
+                                <i class="bi bi-download text-warning"></i>
+                                <span class="ms-1">Download Flow Diagram SVG</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item" id="downloadPdfBtn" title="Download as PDF">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-pdf text-success" viewBox="0 0 16 16">
+                                    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
+                                    <path d="M4.603 14.087a.81.81 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.68 7.68 0 0 1 1.482-.645 19.701 19.701 0 0 0 1.062-2.227 7.269 7.269 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a10.954 10.954 0 0 0 .98 1.686 5.753 5.753 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.856.856 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.716 5.716 0 0 1-.911-.95 11.642 11.642 0 0 0-1.997.406 11.311 11.311 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.793.793 0 0 1-.58.029zm1.379-1.901c-.166.076-.32.156-.459.238-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361.01.022.02.036.026.044a.27.27 0 0 0 .035-.012c.137-.056.355-.235.635-.572a8.18 8.18 0 0 0 .45-.606zm1.64-1.33a12.647 12.647 0 0 1 1.01-.193 11.666 11.666 0 0 1-.51-.858 20.741 20.741 0 0 1-.5 1.05zm2.446.45c.15.162.296.3.435.41.24.19.407.253.498.256a.107.107 0 0 0 .07-.015.307.307 0 0 0 .094-.125.436.436 0 0 0 .059-.2.095.095 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a3.881 3.881 0 0 0-.612-.053zM8.078 7.8a6.7 6.7 0 0 0 .2-.828c.031-.188.043-.343.038-.465a.613.613 0 0 0-.032-.198.517.517 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822.024.111.054.227.09.346z" />
+                                </svg>
+                                <span class="ms-1">Download PDF</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item" id="createConfluenceBtn" title="Create in Confluence">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="text-primary">
+                                    <path d="M8.293 1.293a1 1 0 0 1 1.414 0l6 6a1 1 0 0 1 0 1.414l-6 6a1 1 0 0 1-1.414-1.414L13.586 8 8.293 2.707a1 1 0 0 1 0-1.414z" />
+                                    <path d="M7.293 1.293a1 1 0 0 0-1.414 0l-6 6a1 1 0 0 0 0 1.414l6 6a1 1 0 0 0 1.414-1.414L2.414 8l4.879-4.879a1 1 0 0 0 0-1.414z" />
+                                </svg>
+                                <span class="ms-1">Create Confluence Page</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
         </div>
@@ -326,17 +405,23 @@
         <!-- Add html2pdf.js library -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
         <script>
+
+        
             document.addEventListener('DOMContentLoaded', function () {
-            mermaid.initialize({
-            startOnLoad: true,
-            theme: 'default',
-            securityLevel: 'loose',
-            flowchart: {
-                useMaxWidth: true,
-                htmlLabels: true,
-                curve: 'basis'
-            }
-            });
+                mermaid.initialize({
+                startOnLoad: true,
+                theme: 'default',
+                securityLevel: 'loose',
+                flowchart: {
+                    useMaxWidth: false,
+                    htmlLabels: true,
+                    curve: 'basis'
+                },
+                sequence: {
+                    useMaxWidth: false   // Also disable for sequence diagrams
+                }
+                });
+
                 const editor = new Drawflow(document.getElementById('drawflow'));
                 editor.reroute = true;
                 editor.reroute_fix_curvature = true;
@@ -347,7 +432,7 @@
                 editor.import(data);
 
                 setTimeout(() => {
-                    editor.zoom = 0.8;
+                    editor.zoom = 0.6;
                     editor.canvas_x = -100;
                     editor.canvas_y = -50;
                     editor.zoom_refresh();
@@ -358,66 +443,135 @@
                     mermaid.run();
                 }, 100);
 
-                // PDF Download functionality
-                document.getElementById('downloadPdfBtn').addEventListener('click', function() {
-                    const original = document.querySelector('.left-panel');
-                    // Clone the content to avoid picking up offcanvas styles
-                    const clone = original.cloneNode(true);
-                    // Remove all classes and inline styles
-                    clone.removeAttribute('class');
-                    clone.removeAttribute('style');
-                    // Set a white background and padding for PDF
-                    clone.style.background = '#fff';
-                    clone.style.color = '#222';
-                    clone.style.padding = '24px';
-                    clone.style.width = 'auto';
-                    clone.style.maxWidth = '700px';
-                    clone.style.boxSizing = 'border-box';
+                const scene = document.getElementById('panzoom-element');
+                const panzoom = Panzoom(scene, {
+                    maxScale: 20, // Allow zooming in up to 5x (default is 4)
+                    minScale: 0.2 // Allow zooming out to 0.2x (default is 0.125)
+                });
+                zoomInButton.addEventListener('click', panzoom.zoomIn);
+                zoomOutButton.addEventListener('click', panzoom.zoomOut);
+                resetButton.addEventListener('click', panzoom.reset);
 
-                    // Create a container for the PDF content
-                    const container = document.createElement('div');
-                    container.appendChild(clone);
-                    document.body.appendChild(container);
+                // Panning and pinch zooming are bound automatically (unless disablePan is true).
+                // There are several available methods for zooming
+                // that can be bound on button clicks or mousewheel.
+                scene.parentElement.addEventListener('wheel', panzoom.zoomWithWheel);
 
-                    const opt = {
-                        margin: 0.5,
-                        filename: 'ai-summary.pdf',
-                        image: { type: 'jpeg', quality: 0.98 },
-                        html2canvas: {
-                            scale: 2,
-                            useCORS: true,
-                            logging: false,
-                            backgroundColor: '#fff'
-                        },
-                        jsPDF: {
-                            unit: 'in',
-                            format: 'A4',
-                            orientation: 'portrait'
-                        }
-                    };
-
-                    // Show loading state
-                    const btn = this;
-                    const originalContent = btn.innerHTML;
-                    btn.innerHTML = `
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        <span class="ms-1">Generating PDF...</span>
-                    `;
-                    btn.disabled = true;
-
-                    html2pdf().set(opt).from(clone).save().then(() => {
-                        btn.innerHTML = originalContent;
-                        btn.disabled = false;
-                        document.body.removeChild(container);
-                    }).catch(() => {
-                        btn.innerHTML = originalContent;
-                        btn.disabled = false;
-                        document.body.removeChild(container);
-                    });
+                document.querySelectorAll('g.edgeLabel').forEach(el => {
+                  if (!el.hasAttribute('transform')) {
+                    el.remove();
+                  }
                 });
 
-                // Confluence page creation
-                document.getElementById('createConfluenceBtn').addEventListener('click', async function() {
+                });
+
+
+             // Confluence page creation
+             // Full Screen functionality
+            const cardDrawflow = document.getElementById('card-drawflow');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+            fullscreenBtn.addEventListener('click', () => {
+                if (!document.webkitIsFullScreen) {
+                    if (cardDrawflow.requestFullscreen) {
+                        cardDrawflow.requestFullscreen();
+                    } else if (cardDrawflow.webkitRequestFullscreen) {
+                        cardDrawflow.webkitRequestFullscreen();
+                    } else if (cardDrawflow.msRequestFullscreen) {
+                        cardDrawflow.msRequestFullscreen();
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                }
+            });
+
+            document.getElementById('downloadMermaidSVG').addEventListener('click', async function() {
+                const svg = document.querySelector('.right-panel .mermaid svg');
+                if (svg) {
+                  const blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: 'image/svg+xml' });
+                  const a = document.createElement('a');
+                  a.href = URL.createObjectURL(blob);
+                  a.download = 'flow-diagram.svg';
+                  a.click();
+                }
+            });
+
+            document.getElementById('downloadSequenceDiagramSVG').addEventListener('click', async function() {
+                const svg = document.querySelector('#mermaid-sequence-diagram svg');
+                if (svg) {
+                  const blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: 'image/svg+xml' });
+                  const a = document.createElement('a');
+                  a.href = URL.createObjectURL(blob);
+                  a.download = 'seq-diagram.svg';
+                  a.click();
+                }
+            });
+
+        // PDF Download functionality
+            document.getElementById('downloadPdfBtn').addEventListener('click', function() {
+                const original = document.querySelector('.left-panel');
+                // Clone the content to avoid picking up offcanvas styles
+                const clone = original.cloneNode(true);
+                // Remove all classes and inline styles
+                clone.removeAttribute('class');
+                clone.removeAttribute('style');
+                // Set a white background and padding for PDF
+                clone.style.background = '#fff';
+                clone.style.color = '#222';
+                clone.style.padding = '24px';
+                clone.style.width = 'auto';
+                clone.style.maxWidth = '700px';
+                clone.style.boxSizing = 'border-box';
+
+                // Create a container for the PDF content
+                const container = document.createElement('div');
+                container.appendChild(clone);
+                document.body.appendChild(container);
+
+                const opt = {
+                    margin: 0.5,
+                    filename: 'ai-summary.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: {
+                        scale: 2,
+                        useCORS: true,
+                        logging: false,
+                        backgroundColor: '#fff'
+                    },
+                    jsPDF: {
+                        unit: 'in',
+                        format: 'A4',
+                        orientation: 'portrait'
+                    }
+                };
+
+                // Show loading state
+                const btn = this;
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = `
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span class="ms-1">Generating PDF...</span>
+                `;
+                btn.disabled = true;
+
+                html2pdf().set(opt).from(clone).save().then(() => {
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    document.body.removeChild(container);
+                }).catch(() => {
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    document.body.removeChild(container);
+                });
+
+            });
+            document.getElementById('createConfluenceBtn').addEventListener('click', async function() {
                     const btn = this;
                     const originalContent = btn.innerHTML;
                     btn.innerHTML = `
@@ -451,68 +605,6 @@
                         btn.disabled = false;
                     }
                 });
-            });
-
-            document.getElementById('downloadMermaidSVG').addEventListener('click', async function() {
-                const svg = document.querySelector('.right-panel .mermaid svg');
-                if (svg) {
-                  const blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: 'image/svg+xml' });
-                  const a = document.createElement('a');
-                  a.href = URL.createObjectURL(blob);
-                  a.download = 'flow-diagram.svg';
-                  a.click();
-                }
-            });
-
-            document.querySelectorAll('g.edgeLabel').forEach(el => {
-              if (!el.hasAttribute('transform')) {
-                el.remove();
-              }
-            });
-
-            // Full Screen functionality
-            const cardDrawflow = document.getElementById('card-drawflow');
-            const fullscreenBtn = document.getElementById('fullscreenBtn');
-
-            fullscreenBtn.addEventListener('click', () => {
-                if (!document.webkitIsFullScreen) {
-                    if (cardDrawflow.requestFullscreen) {
-                        cardDrawflow.requestFullscreen();
-                    } else if (cardDrawflow.webkitRequestFullscreen) {
-                        cardDrawflow.webkitRequestFullscreen();
-                    } else if (cardDrawflow.msRequestFullscreen) {
-                        cardDrawflow.msRequestFullscreen();
-                    }
-                } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    } else if (document.webkitExitFullscreen) {
-                        document.webkitExitFullscreen();
-                    } else if (document.msExitFullscreen) {
-                        document.msExitFullscreen();
-                    }
-                }
-            });
-
-            const connection = new signalR.HubConnectionBuilder()
-                .withUrl("/progressHub")
-                .build();
-
-            connection.on("ReportProgress", (message, percent) => {
-                document.getElementById("progressWrapper").style.display = "block";
-
-                const msgEl = document.getElementById("progressMessage");
-                msgEl.textContent = message;
-                const bar = document.getElementById("progressBar");
-                bar.style.width = percent + "%";
-                bar.textContent = percent + "%";
-                if (percent >= 100) {
-                    setTimeout(() => document.getElementById("progressWrapper").style.display = "none", 500);
-                    msgEl.textContent = "";
-                }
-            });
-
-            connection.start().catch(console.error);
         </script>
     }
 }

@@ -27,8 +27,7 @@ namespace ManDrill.Client.Controllers
         {
             return View(new AnalyzerViewModel
             {
-                Overloads = [],
-                SelectedOverload = 0,
+                SelectedOverload = 1,
                 JsonOutput = "{}"
             });
         }
@@ -40,13 +39,18 @@ namespace ManDrill.Client.Controllers
             ArgumentException.ThrowIfNullOrWhiteSpace(className);
             ArgumentException.ThrowIfNullOrWhiteSpace(methodNameInput);
 
+            if(overloadNumber<1)
+            {
+                overloadNumber = 1;
+            }
+
             solutionPath = solutionPath.Trim('"');
             if (!_cache.TryGetValue<Solution>(solutionPath, out var currentLoadedSoln) || currentLoadedSoln == null)
             {
                 currentLoadedSoln = await LoadSolution(solutionPath);
             }
 
-            await _hub.Clients.All.SendAsync("ReportProgress", "Analyzing projects…", 20);
+            await _hub.Clients.All.SendAsync("ReportProgress", "Analyzing projects...", 20);
 
             var overloads = new List<IMethodSymbol>();
             int total = currentLoadedSoln.Projects.Count();
@@ -78,7 +82,7 @@ namespace ManDrill.Client.Controllers
                 await _hub.Clients.All.SendAsync("ReportProgress", $"Processed {done}/{total} projects", percent);
             }
 
-            if (overloads.Count == 0)
+            if (overloads.Count <= 0 || overloadNumber > overloads.Count)
             {
                 throw new Exception("Method not found");
             }
@@ -88,31 +92,62 @@ namespace ManDrill.Client.Controllers
             var rootInfo = await extractor.ExtractAsync(methodSymbol);
 
             string json = JsonSerializer.Serialize(rootInfo, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
-            await _hub.Clients.All.SendAsync("ReportProgress", "Generating method summary using AI...", 90);
+            
+            // Get dependency index items from the extractor
+            await _hub.Clients.All.SendAsync("ReportProgress", "Generating dependency index...", 90);
+            var dependencyIndexItems = extractor.GetDependencyIndexItems();
+            var paths = await extractor.ExtractSuperAncestorsAsync(methodSymbol);
+
+            var ancestorPaths = paths.Select(path => path.Select(m => $"{m.ContainingType.Name}.{m.Name}").ToList())
+                        .GroupBy(list => list[^1])
+                        .Select(group => group.First())
+                        .ToList();
+            await _hub.Clients.All.SendAsync("ReportProgress", "Generating method summary using AI...", 95);
             var methodSummary = includeAISummary ? await (new AIService()).GenerateMethodSummary(methodSymbol, json) : null;
-            await _hub.Clients.All.SendAsync("ReportProgress", "Embedded AI Response.", 100);
+            await _hub.Clients.All.SendAsync("ReportProgress", "Embedded Response.", 100);
             return View(new AnalyzerViewModel
             {
                 SolutionPath = solutionPath,
                 NamespaceName = namespaceName,
                 ClassName = className,
                 MethodName = methodNameInput,
-                //Overloads are currently not functional and not doing anything.
-                Overloads = overloads.Select((m, i) => new OverloadInfo
-                {
-                    Index = i + 1,
-                    Signature = $"{m.ReturnType} {m.Name}({string.Join(", ", m.Parameters.Select(p => $"{p.Type} {p.Name}"))})"
-                }).ToList() ?? [],
-                SelectedOverload = 1,
-                AISummary = methodSummary,
+                AISummary = methodSummary ?? string.Empty,
                 JsonOutput = DrawCallMapper.ConvertMethodCallJsonToDrawflow(json, solutionPath) ?? "{}",
-                IncludeAISummary = includeAISummary
+                IncludeAISummary = includeAISummary,
+                ProjectDependencyDiagram = DrawCallMapper.CreateProjectsDependencyFlow(currentLoadedSoln) ?? "",
+                MethodSequenceDiagram = DrawCallMapper.CreateMethodCallSequenceDiagram(json) ?? "",
+                //Diagrams = [
+                //    new DiagramDetails() {
+                //        Name = "Interactive Flow Diagram",
+                //        DiagramInputData = DrawCallMapper.ConvertMethodCallJsonToDrawflow(json, solutionPath) ?? "{}",
+                //        DiagramPartialViewName = "_DrawFlowChartPartial"
+                //    },
+                //    new DiagramDetails() {
+                //        Name = "Method Call Flow",
+                //        DiagramInputData = DrawCallMapper.CreateMethodCallSequenceDiagram(json) ?? "",
+                //        DiagramPartialViewName = "_MermaidChartPartial"
+                //    },
+                //    new DiagramDetails() {
+                //        Name = "Project Topology",
+                //        DiagramInputData = DrawCallMapper.CreateProjectsDependencyFlow(currentLoadedSoln) ?? "",
+                //        DiagramPartialViewName = "_MermaidChartPartial"
+                //    },
+                //    new DiagramDetails() {
+                //        Name = "Method Dependencies",
+                //        DiagramInputData = dependencyIndexItems,
+                //        DiagramPartialViewName = "_DependencyIndexTablePartial",
+                //        AdditionalTitleAttributes = dependencyIndexItems.Count.ToString()
+                //    }
+                //],
+                DependencyIndexItems = dependencyIndexItems,
+                Ancestors = ancestorPaths,
+                MethodCallJson = json
             });
         }
 
         private async Task<Solution> LoadSolution(string solutionPath)
         {
-            await _hub.Clients.All.SendAsync("ReportProgress", "Opening solution…", 20);
+            await _hub.Clients.All.SendAsync("ReportProgress", "Opening solution...", 20);
 
             using var workspace = MSBuildWorkspace.Create(new Dictionary<string, string>
                 {

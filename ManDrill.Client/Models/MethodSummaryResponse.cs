@@ -1,4 +1,6 @@
-﻿namespace ManDrill.Client.Models
+﻿using System.Text.Json.Serialization;
+
+namespace ManDrill.Client.Models
 {
     public class MethodSummaryResponse
     {
@@ -11,6 +13,12 @@
         public List<string> Dependencies { get; set; }
         public string PerformanceNotes { get; set; }
         public string Conclusion { get; set; }
-        public Dictionary<string, string> TimeSaved { get; set; }
+        public TimeSaved TimeSaved { get; set; }
+    }
+
+    public class TimeSaved
+    {
+        [JsonPropertyName("estimateMinutes")] // makes sure JSON "estimateMinutes" binds correctly
+        public string EstimateMinutes { get; set; }
     }
 }

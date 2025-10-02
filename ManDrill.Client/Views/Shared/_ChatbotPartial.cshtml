@@ -1,0 +1,333 @@
+﻿@* Views/Shared/_Chatbot.cshtml *@
+@model string
+<div class="chatbot-container hidden">
+    <div class="chatbot-header mdr-bg" id="chatbotHeader">
+        <div>
+            <h5 class="mb-0"><i class="fas fa-robot me-2"></i><i class="bi bi-lightning-fill text-warning"></i> Mandrill Spark</h5>
+            <small>Query your loaded method</small>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-light" id="minimizeBtn">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="chatbot-body bg-dark text-dark" id="chatbotBody">
+        @if(string.IsNullOrWhiteSpace(Model))
+        {
+            <div class="chatbot-messages" id="chatMessages">
+                <div class="message bot-message">
+                    No method loaded for analysis.
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="chatbot-messages" id="chatMessages">
+                <div class="message bot-message">
+                    Hello! How can I assist you today?
+                    <div class="timestamp">Just now</div>
+                </div>
+            </div>
+
+            <div class="typing-indicator" id="typingIndicator">
+                AI is thinking...
+            </div>
+        }
+
+        <div class="chatbot-input input-group">
+            <input type="text" class="form-control bg-dark text-light" disabled="@string.IsNullOrWhiteSpace(Model)" id="userInput" placeholder="Type your question here...">
+            <button class="btn btn-info" id="sendBtn" disabled="@string.IsNullOrWhiteSpace(Model)">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Chatbot Icon (shown when minimized) -->
+<div class="chatbot-icon" id="chatbotIcon">
+    <i class="fas fa-robot fa-2x"></i>
+</div>
+
+<style>
+    /* Your existing CSS remains the same */
+    .chatbot-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        width: 400px;
+        max-width: 90vw;
+        bottom:0;
+    }
+
+    #userInput::placeholder {
+        color: #fff !important;
+        opacity: 1;
+    }
+
+    .chatbot-header {
+        color: white;
+        border-radius: 10px 10px 0 0;
+        padding: 12px 15px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chatbot-body {
+        background-color: white;
+        border-top: none;
+        height: 600px;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .chatbot-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .message {
+        padding: 10px 15px;
+        border-radius: 18px;
+        max-width: 80%;
+        word-wrap: break-word;
+    }
+
+    .user-message {
+        /* background-color: #f1f1f1; */
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 5px;
+        border: 2px dotted white;
+    }
+
+    .bot-message {
+        background: #1e1e1e;
+        color: #fff;
+        align-self: flex-start;
+        border-bottom-left-radius: 5px;
+    }
+
+    .chatbot-input {
+        padding: 15px;
+        border-top: 1px dotted #06b6d4;
+        display: flex;
+        /* gap: 10px; */
+    }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 20px;
+        }
+
+    .typing-indicator {
+        display: none;
+        align-self: flex-start;
+        padding: 10px 15px;
+        border-radius: 18px;
+        border-bottom-left-radius: 5px;
+        color: white;
+        font-style: italic;
+    }
+
+    .chatbot-icon {
+        background-color: #06b6d4;
+        color: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .timestamp {
+        font-size: 0.7rem;
+        opacity: 0.7;
+        margin-top: 5px;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Chatbot script loaded'); // Debug log
+
+        // Elements
+        const chatbotContainer = document.querySelector('.chatbot-container');
+        const chatbotBody = document.getElementById('chatbotBody');
+        const chatbotIcon = document.getElementById('chatbotIcon');
+        const minimizeBtn = document.getElementById('minimizeBtn');
+        const chatbotHeader = document.getElementById('chatbotHeader');
+        const sendBtn = document.getElementById('sendBtn');
+        const userInput = document.getElementById('userInput');
+        const chatMessages = document.getElementById('chatMessages');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        // Debug: Check if elements are found
+        console.log('Elements found:', {
+            sendBtn: !!sendBtn,
+            userInput: !!userInput,
+            minimizeBtn: !!minimizeBtn
+        });
+
+        // Toggle chatbot visibility
+        function toggleChatbot() {
+            chatbotContainer.classList.toggle('hidden');
+            chatbotIcon.classList.toggle('hidden');
+        }
+
+        // Minimize button click
+        minimizeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            console.log('Minimize button clicked'); // Debug log
+            toggleChatbot();
+        });
+
+        // Header click to maximize
+        chatbotHeader.addEventListener('click', function() {
+            console.log('Header clicked'); // Debug log
+            if (chatbotContainer.classList.contains('hidden')) {
+                toggleChatbot();
+            }
+        });
+
+        // Chat icon click to maximize
+        chatbotIcon.addEventListener('click', function() {
+            console.log('Chat icon clicked'); // Debug log
+            toggleChatbot();
+        });
+
+        // Send message
+        function sendMessage() {
+            const message = userInput.value.trim();
+            console.log('Send message called:', message); // Debug log
+
+            if (message === '') return;
+
+            // Add user message to chat
+            addMessage(message, 'user');
+
+            // Clear input
+            userInput.value = '';
+
+            // Show typing indicator
+            typingIndicator.style.display = 'block';
+
+            // Scroll to bottom
+            scrollToBottom();
+
+            // Send to controller (AJAX call)
+            sendToController(message, '@Model');
+        }
+
+        // Send button click
+        sendBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Send button clicked'); // Debug log
+            sendMessage();
+        });
+
+        // Enter key to send
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                console.log('Enter key pressed'); // Debug log
+                sendMessage();
+            }
+        });
+
+        const md = window.markdownit();
+        // Add message to chat
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', 'markdown');
+            messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const rendered = md.render(text);
+            messageDiv.innerHTML = `
+                ${rendered}
+                <div class="timestamp">${timestamp}</div>
+            `;
+
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        
+
+        // Scroll to bottom of chat
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send message to controller
+        function sendToController(message, context) {
+            console.log('Sending to controller:', { message, context }); // Debug log
+
+            // Get anti-forgery token
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            // AJAX call to your controller - FIXED URL
+            fetch('@Url.Action("SendMessage", "Chat")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token || ''
+                },
+                body: JSON.stringify({
+                    message: message,
+                    context: context
+                })
+            })
+            .then(response => {
+                console.log('Response status:', response.status); // Debug log
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data); // Debug log
+                // Hide typing indicator
+                typingIndicator.style.display = 'none';
+
+                // Add bot response
+                if (data && data.response) {
+                    addMessage(data.response, 'bot');
+                } else {
+                    addMessage('Sorry, I did not get a proper response.', 'bot');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                typingIndicator.style.display = 'none';
+                addMessage('Sorry, there was an error processing your request: ' + error.message, 'bot');
+            });
+        }
+
+        // Initial scroll to bottom
+        scrollToBottom();
+
+        // Test that functions are working
+        console.log('Chatbot initialized successfully');
+    });
+</script>
