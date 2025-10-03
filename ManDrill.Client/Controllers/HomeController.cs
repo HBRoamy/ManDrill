@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.Extensions.Caching.Memory;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 
@@ -102,6 +103,12 @@ namespace ManDrill.Client.Controllers
                         .GroupBy(list => list[^1])
                         .Select(group => group.First())
                         .ToList();
+            string chatBotContext = string.Empty;
+            if (true)//based on user preference
+            {
+                var contextBuilderInput = json + await BuildMethodBodiesStringSimplified(rootInfo);
+                chatBotContext = contextBuilderInput; // await(new AIService()).GetCompiledMethodHierarchySummary(contextBuilderInput) ??;
+            }
             await _hub.Clients.All.SendAsync("ReportProgress", "Generating method summary using AI...", 95);
             var methodSummary = includeAISummary ? await (new AIService()).GenerateMethodSummary(methodSymbol, json) : null;
             await _hub.Clients.All.SendAsync("ReportProgress", "Embedded Response.", 100);
@@ -141,8 +148,67 @@ namespace ManDrill.Client.Controllers
                 //],
                 DependencyIndexItems = dependencyIndexItems,
                 Ancestors = ancestorPaths,
-                MethodCallJson = json
+                ChatBotContext = chatBotContext
             });
+        }
+
+        // Simplified version using the stored symbol
+        public async Task<string> BuildMethodBodiesStringSimplified(MethodCallInfo rootMethod)
+        {
+            var sb = new StringBuilder();
+            await BuildMethodBodiesRecursiveSimplified(rootMethod, sb, 0, new());
+            return sb.ToString();
+        }
+
+        private async Task BuildMethodBodiesRecursiveSimplified(MethodCallInfo methodCall, StringBuilder sb, int indentLevel, AIService aIService)
+        {
+            string indent = new string(' ', indentLevel * 2);
+
+            // Method header
+            sb.AppendLine($"{indent}=== {methodCall.Namespace}.{methodCall.ClassName}.{methodCall.Name} ===");
+            sb.AppendLine($"{indent}Signature: {methodCall.ReturnType} {methodCall.Name}({methodCall.ParamsInfo})");
+
+            if (!string.IsNullOrEmpty(methodCall.ResolvedFrom))
+            {
+                sb.AppendLine($"{indent}Interface: {methodCall.ResolvedFrom}");
+            }
+
+            sb.AppendLine();
+
+            // Method implementation
+            if (methodCall.MethodSymbol != null)
+            {
+                var implementation = await aIService.GetMethodImplementation(methodCall.MethodSymbol);
+                if (!string.IsNullOrEmpty(implementation))
+                {
+                    sb.AppendLine($"{indent}Implementation:");
+                    var implementationLines = implementation.Split('\n');
+                    foreach (var line in implementationLines)
+                    {
+                        sb.AppendLine($"{indent}{line.TrimEnd()}");
+                    }
+                }
+                else
+                {
+                    sb.AppendLine($"{indent}// Implementation not available in source");
+                }
+            }
+            else
+            {
+                sb.AppendLine($"{indent}// Method symbol not available");
+            }
+
+            sb.AppendLine();
+
+            // Process internal calls
+            if (methodCall.InternalCalls != null && methodCall.InternalCalls.Any())
+            {
+                sb.AppendLine($"{indent}--- Called Methods ---");
+                foreach (var internalCall in methodCall.InternalCalls)
+                {
+                    await BuildMethodBodiesRecursiveSimplified(internalCall, sb, indentLevel + 1, aIService);
+                }
+            }
         }
 
         private async Task<Solution> LoadSolution(string solutionPath)

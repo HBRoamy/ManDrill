@@ -34,7 +34,7 @@ namespace ManDrill.Client.Models
         /// </summary>
         public List<DependencyIndexItem> DependencyIndexItems { get; set; } = new List<DependencyIndexItem>();
         public List<List<string>> Ancestors { get; set; } = [];
-        public string MethodCallJson { get; set; }
+        public string ChatBotContext { get; set; }
     }
 
     public class DiagramDetails

@@ -189,6 +189,11 @@
                             Dependent Parties <span class="badge bg-warning text-dark">@(Model?.Ancestors?.Count() ?? 0)</span>
                         </button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="captured-context-index-tab" data-bs-toggle="tab" data-bs-target="#captured-context-tab-pane" type="button" role="tab" aria-controls="captured-context-tab-pane" aria-selected="false">
+                            Captured Context
+                        </button>
+                    </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
@@ -346,13 +351,17 @@
                             }
                         </div>
                     </div>
+                    <div class="tab-pane fade text-light" id="captured-context-tab-pane" role="tabpanel" aria-labelledby="captured-context-tab" tabindex="0">
+                        <div class="card card-body bg-dark" id="captured-context-body">
 
+                        </div>
+                    </div>
                 </div>
            </div>
         </div>
     </div>
 
-    @await Html.PartialAsync("_ChatbotPartial", Model.MethodCallJson)
+    @await Html.PartialAsync("_ChatbotPartial", Model.ChatBotContext)
 
     <div class="offcanvas offcanvas-end bg-dark text-light" style="--bs-offcanvas-width: 100%;" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
         <div class="offcanvas-header border-bottom border-secondary d-flex justify-content-between align-items-center">
@@ -605,6 +614,21 @@
                         btn.disabled = false;
                     }
                 });
+
+                // Handle markdown rendering for captured context
+                if (typeof markdownit !== 'undefined') {
+                    const md1 = markdownit();
+                    const contextContent = @Html.Raw(Json.Serialize(Model.ChatBotContext ?? ""));
+                    if (contextContent) {
+                        const renderedMarkdown = md1.render(contextContent);
+                        const contextTab = document.getElementById('captured-context-body');
+                        if (contextTab) {
+                            contextTab.innerHTML = renderedMarkdown;
+                        }
+                    }
+                } else {
+                    console.warn('markdown-it library not loaded');
+                }
         </script>
     }
 }

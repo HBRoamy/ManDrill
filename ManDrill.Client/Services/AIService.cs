@@ -183,15 +183,86 @@ REMEMBER: Output ONLY the JSON object, no additional text or formatting.
         /// </summary>
         /// <param name="methodSymbol">The method symbol to extract implementation from</param>
         /// <returns>The method implementation as a string, or null if not available</returns>
-        private async Task<string?> GetMethodImplementation(IMethodSymbol methodSymbol)
+        public async Task<string?> GetMethodImplementation(IMethodSymbol methodSymbol)
         {
-            var methodLocation = methodSymbol.Locations.FirstOrDefault();
+            var methodLocation = methodSymbol.Locations.FirstOrDefault();//TODO: Look into it. Is this always the right one?
             if (methodLocation == null || !methodLocation.IsInSource)
                 return null;
 
             var syntaxTree = await methodLocation.SourceTree.GetRootAsync();
             var methodNode = syntaxTree.FindNode(methodLocation.SourceSpan);
             return methodNode.ToString();
+        }
+
+        public async Task<string?> GetCompiledMethodHierarchySummary(string context)
+        {
+            var prompt = @$"You are a highly skilled C# code assistant. I will provide you with a detailed method call hierarchy along with the full implementation of each method. 
+
+Your task is to produce a **concise, structured, and comprehensive markdown summary** of this codebase that preserves all information needed to understand the **behavior, call flow, and relationships between methods**, but **does not include the full method bodies**.
+
+Instructions:
+
+1. Summarize each method in 10-15 sentences describing:
+   - What the method does
+   - Its input/output
+   - Method metadata (namespace, class, asynchrony, virtual, abstract, public, private etc)
+   - Important side effects
+   - Any methods it calls (just names, not full bodies)
+   - Any data persistance related info
+   - any performance related stuff
+   - code quality
+   - any external packages, dependencies, services
+   - basically everything
+
+2. Represent the call hierarchy clearly, e.g., using indentation, bullets, or a tree structure.
+
+3. Do not include unnecessary comments, blank lines, or code unless needed for clarity.
+
+4. Ensure that the summary is sufficient to understand the complete flow, so that in future prompts, only this summary can be sent to answer questions about the program logic.
+
+5. Add any additional notes which should be included to make the context richer.
+
+Here is the code context:
+{context}
+Return the result as a **structured summary**, ready to be included in future AI prompts.
+";
+
+            var requestBody = new
+            {
+                anthropic_version = "bedrock-2023-05-31",
+                max_tokens = 30000,
+                temperature = 0.1,
+                messages = new[]
+               {
+                    new
+                    {
+                        role = "user",
+                        content = prompt
+                    }
+                }
+            };
+
+            var requestBodyJson = JsonSerializer.Serialize(requestBody);
+            var requestBodyBytes = System.Text.Encoding.UTF8.GetBytes(requestBodyJson);
+            var request = new InvokeModelRequest
+            {
+                ModelId = ClaudeModelId,
+                ContentType = "application/json",
+                Body = new MemoryStream(requestBodyBytes)
+            };
+
+            var response = await _bedrockClient.InvokeModelAsync(request);
+
+            using var reader = new StreamReader(response.Body);
+            var responseJson = await reader.ReadToEndAsync();
+
+            var responseData = JsonSerializer.Deserialize<JsonElement>(responseJson);
+            var aiResponse = responseData.GetProperty("content")[0].GetProperty("text").GetString();
+
+            if (string.IsNullOrEmpty(aiResponse))
+                return "Summary generation failed";
+
+            return aiResponse;
         }
 
         /// <summary>

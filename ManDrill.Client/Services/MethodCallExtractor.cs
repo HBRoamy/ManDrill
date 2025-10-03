@@ -266,6 +266,7 @@ namespace ManDrill.Client.Services
         {
             var methodInfo = new MethodCallInfo
             {
+                MethodSymbol = methodSymbol,
                 Name = methodSymbol.Name,
                 ClassName = methodSymbol.ContainingType.Name,
                 Namespace = methodSymbol.ContainingNamespace.ToString(),

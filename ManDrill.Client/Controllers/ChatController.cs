@@ -33,11 +33,11 @@ namespace ManDrill.Client.Controllers
             }
         }
 
-        private async Task<string> ProcessWithBedrock(string userMessage, string methodCallJson)
+        private async Task<string> ProcessWithBedrock(string userMessage, string context)
         {
             // Your AWS Bedrock implementation
             // This is where you'll integrate with AWS Bedrock
-            string prompt = $"Based on this method call flow data: {methodCallJson}. Answer in 1-3 sentences (markdown-formatted and styled including bullet-pointed, paragraphs, highlighted keywords): {userMessage}.";
+            string prompt = $"Based on this context: {context}. Answer in 1-3 sentences (markdown-formatted and styled including bullet-pointed, paragraphs, highlighted keywords): {userMessage}.";
             // Example structure:
             var response = await (new AIService()).GenerateAnswerWithClaude(prompt);
             return response;

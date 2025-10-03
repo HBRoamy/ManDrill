@@ -1,7 +1,12 @@
-﻿namespace ManDrill.Client.Models
+﻿using System.Text.Json.Serialization;
+using Microsoft.CodeAnalysis;
+
+namespace ManDrill.Client.Models
 {
     public class MethodCallInfo
     {
+        [JsonIgnore]
+        public IMethodSymbol MethodSymbol { get; set; }
         public string Name { get; set; }
         public string ClassName { get; set; }
         public string Namespace { get; set; }
